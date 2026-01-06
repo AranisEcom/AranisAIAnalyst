@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Ads AI - Scale Bisnes Senang & Santai | ARANIS ECOM HUB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --bg-card: #181b21;
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.5);
+            --secondary: #3b82f6;
+            --accent: #34d399;
+            --money: #10b981; /* Green for money */
+            --danger: #ef4444;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --gradient-bg: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --gradient-text: linear-gradient(90deg, #c084fc, #60a5fa);
+            --radius: 20px;
+        }
+
+        /* --- SETUP ASAS --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; padding-bottom: 80px; }
+        
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; width: 100%; }
+        .text-center { text-align: center; }
+        .highlight { color: var(--accent); font-weight: 700; }
+        .strike { text-decoration: line-through; color: var(--text-muted); opacity: 0.6; }
+        
+        /* --- BACKGROUND ANIMATION --- */
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(80px); z-index: 0; opacity: 0.4;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .orb-1 { width: 300px; height: 300px; background: var(--primary); top: -50px; left: -100px; }
+        .orb-2 { width: 400px; height: 400px; background: var(--secondary); bottom: 10%; right: -150px; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 16px 36px; border-radius: 50px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            font-size: 1rem; position: relative; overflow: hidden; white-space: nowrap;
+        }
+        .btn-primary {
+            background: var(--gradient-bg); color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-4px); 
+            box-shadow: 0 10px 30px var(--primary-glow);
+        }
+        .btn-primary::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        .btn-primary:hover::after { left: 100%; }
+        .btn-icon { margin-right: 10px; }
+
+        /* --- HEADER --- */
+        header { padding: 20px 0; position: fixed; width: 100%; top: 0; z-index: 100; background: rgba(15, 17, 21, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.2rem; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo span { background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- HERO SECTION --- */
+        .hero { padding: 140px 0 80px; position: relative; text-align: center; overflow: hidden; }
+        .hero-tag { 
+            background: rgba(52, 211, 153, 0.1); color: var(--accent); padding: 6px 16px; 
+            border-radius: 30px; font-size: 0.8rem; font-weight: 600; margin-bottom: 20px; 
+            display: inline-block; border: 1px solid rgba(52, 211, 153, 0.2); 
+            box-shadow: 0 0 15px rgba(52, 211, 153, 0.1);
+        }
+        
+        .hero h1 { 
+            font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.1; margin-bottom: 25px; font-weight: 800; 
+            letter-spacing: -1px; 
+        }
+        .hero-gradient-text {
+            background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px; padding: 0 10px; }
+        
+        /* --- PAIN / SAKIT HATI --- */
+        .section { padding: 60px 0; position: relative; }
+        .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 40px; }
+        .pain-card { background: var(--bg-card); padding: 30px; border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.03); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); height: 100%; }
+        .pain-card:hover { transform: translateY(-8px); border-color: rgba(139, 92, 246, 0.3); background: #1c2028; }
+        .pain-icon { font-size: 1.8rem; background: rgba(239, 68, 68, 0.1); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: #f87171; margin-bottom: 15px; }
+        .pain-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
+
+        /* --- SOLUTION & TYPING EFFECT --- */
+        .solution-box { 
+            background: linear-gradient(180deg, rgba(31, 41, 55, 0.5) 0%, rgba(59, 130, 246, 0.05) 100%); 
+            border-radius: var(--radius); padding: 40px 30px; margin-top: 40px; 
+            border: 1px solid rgba(59, 130, 246, 0.2); 
+            display: flex; flex-wrap: wrap; align-items: center; gap: 40px; 
+            backdrop-filter: blur(10px);
+        }
+        .solution-text { flex: 1; min-width: 280px; }
+        
+        .chat-bubble { 
+            flex: 1; min-width: 280px; background: #111827; padding: 20px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.08); font-family: 'Courier New', monospace; font-size: 0.85rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .msg { margin-bottom: 15px; padding: 15px; border-radius: 12px; line-height: 1.6; }
+        .msg-ai { 
+            background: rgba(139, 92, 246, 0.15); border-left: 4px solid var(--primary); color: #e9d5ff; 
+            position: relative;
+        }
+        .cursor { display: inline-block; width: 8px; height: 16px; background: var(--accent); animation: blink 1s infinite; vertical-align: middle; margin-left: 4px; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- LIVE TEST JOURNEY STYLES --- */
+        .journey-section {
+            background: radial-gradient(circle at 50% 50%, #1a202c 0%, var(--bg-dark) 100%);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 50px auto 0;
+            padding: 20px 0;
+        }
+        /* The Line */
+        .timeline::before {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
+            background: #2d3748; transform: translateX(-50%); border-radius: 2px;
+        }
+        /* The Progress Line (Animated) */
+        .timeline-progress {
+            content: ''; position: absolute; top: 0; left: 50%; width: 4px;
+            height: 0%; /* JS will update this */
+            background: var(--gradient-bg); transform: translateX(-50%);
+            border-radius: 2px; box-shadow: 0 0 15px var(--primary); transition: height 0.1s linear;
+            z-index: 1;
+        }
+        
+        .timeline-item {
+            display: flex; justify-content: flex-end; padding-bottom: 50px; position: relative; width: 50%;
+            opacity: 0; /* Hidden initially for animation */
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .timeline-item.active { opacity: 1; }
+        
+        .timeline-item:nth-child(odd) { align-self: flex-start; text-align: right; padding-right: 40px; left: 0; transform: translateX(-30px); }
+        .timeline-item:nth-child(odd).active { transform: translateX(0); }
+        
+        .timeline-item:nth-child(even) { align-self: flex-end; text-align: left; padding-left: 40px; left: 50%; transform: translateX(30px); }
+        .timeline-item:nth-child(even).active { transform: translateX(0); }
+        
+        .timeline-dot {
+            position: absolute; width: 24px; height: 24px; background: #2d3748;
+            border: 4px solid var(--bg-dark); border-radius: 50%; top: 20px; z-index: 10; 
+            transition: 0.5s;
+        }
+        .timeline-item.active .timeline-dot {
+            background: var(--accent); box-shadow: 0 0 15px var(--accent); border-color: var(--bg-dark);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-dot { right: -12px; }
+        .timeline-item:nth-child(even) .timeline-dot { left: -12px; }
+        
+        .journey-card {
+            background: var(--bg-card); border-radius: 16px; padding: 25px;
+            border: 1px solid rgba(255,255,255,0.05); width: 100%; transition: 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .journey-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary); opacity: 0; transition: 0.3s;
+        }
+        .timeline-item.active .journey-card::before { opacity: 1; }
+        .journey-card:hover { background: #1f242d; }
+        
+        .day-badge {
+            display: inline-block; background: rgba(255,255,255,0.05); color: var(--text-main);
+            padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+            margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .ai-badge {
+            display: inline-flex; align-items: center; gap: 6px; background: rgba(139, 92, 246, 0.15);
+            color: #c4b5fd; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem;
+            font-weight: 600; margin-bottom: 12px; border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Image Grid & Image Styles Updated */
+        .img-grid { display: grid; gap: 10px; margin-top: 15px; }
+        .grid-1 { grid-template-columns: 1fr; }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        
+        /* Full Size Images & Zoom Effect */
+        .journey-img {
+            width: 100%;
+            height: auto; 
+            display: block;
+            border-radius: 8px;
+            background: #252a33;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: zoom-in; 
+            object-fit: contain; 
+        }
+        .journey-img:hover {
+            transform: scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
+        }
+        
+        /* Responsive YouTube Wrapper */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #000;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- MOBILE RESPONSIVE OVERHAUL --- */
+        @media(max-width: 768px) {
+            /* Container adjustments */
+            .container { padding: 0 15px; }
+
+            /* Header */
+            .nav-content .btn {
+                padding: 8px 12px !important;
+                font-size: 0.75rem !important;
+            }
+            .nav-content .btn .btn-icon { margin-right: 6px; }
+
+            /* Pain Grid */
+            .pain-grid { grid-template-columns: 1fr; } /* Force single column */
+
+            /* Timeline Specifics */
+            .timeline::before, .timeline-progress { left: 20px; }
+            .timeline-item { 
+                width: 100%; 
+                padding-left: 45px; /* Reduced from 55px for better content width */
+                padding-right: 0; 
+                text-align: left; 
+                padding-bottom: 40px; /* Reduce spacing between items */
+            }
+            .timeline-item:nth-child(odd) { left: 0; padding-left: 45px; text-align: left; transform: translateX(20px); }
+            .timeline-item:nth-child(odd).active { transform: translateX(0); }
+            
+            .timeline-item:nth-child(even) { left: 0; padding-left: 45px; transform: translateX(20px); }
+            .timeline-item:nth-child(even).active { transform: translateX(0); }
+
+            .timeline-item:nth-child(odd) .timeline-dot,
+            .timeline-item:nth-child(even) .timeline-dot { left: 8px; right: auto; }
+            
+            /* Journey Card adjustments */
+            .journey-card { padding: 20px; } /* Reduce padding for small screens */
+
+            /* Images Grid */
+            .grid-2, .grid-3 { grid-template-columns: 1fr; } 
+            
+            /* Hero Text */
+            .hero h1 { font-size: 2rem; }
+            .solution-box { padding: 30px 20px; flex-direction: column-reverse; /* Chat on top visually if needed, or keep column */ }
+
+            /* Comparison */
+            .comparison-wrapper { flex-direction: column; align-items: center; }
+            .comp-box { max-width: 100%; }
+
+            /* Super Wow Review Mobile */
+            .super-visual-wrapper { padding: 0 10px; }
+            .profit-number-display { font-size: 2.5rem !important; }
+        }
+
+        @media(max-width: 480px) {
+            /* Extra Small Fixes */
+            .hero { padding-top: 120px; }
+            .btn { width: 100%; justify-content: center; }
+            .hero .btn { width: auto; min-width: 200px; } /* Keep CTA centered */
+        }
+
+        /* --- LIGHTBOX STYLES --- */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .lightbox-img {
+            max-width: 95%;
+            max-height: 90vh;
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            object-fit: contain;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 10000;
+            transition: 0.2s;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+        }
+        .lightbox-close:hover { color: var(--danger); transform: scale(1.1); }
+
+        /* --- SUPER WOW REVIEW SECTION STYLES --- */
+        .super-wow-section {
+            padding: 100px 0;
+            position: relative;
+            background: radial-gradient(circle at center, rgba(16, 185, 129, 0.08) 0%, rgba(15, 17, 21, 1) 70%);
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        /* Floating Background Icons */
+        .floating-rm {
+            position: absolute;
+            color: var(--money);
+            font-weight: 900;
+            font-size: 1.5rem;
+            opacity: 0.1;
+            animation: floatUp 10s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.15; }
+            80% { opacity: 0.15; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .super-visual-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .super-badge {
+            display: inline-block;
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid var(--money);
+            color: var(--accent);
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        }
+
+        .visual-card {
+            background: rgba(24, 27, 33, 0.8);
+            border-radius: 24px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+        }
+        .visual-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 30px 60px rgba(16, 185, 129, 0.15);
+            border-color: var(--money);
+        }
+
+        /* The Image Frame */
+        .img-frame {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .wow-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            opacity: 0.9;
+            transition: opacity 0.3s;
+        }
+        .visual-card:hover .wow-img { opacity: 1; }
+
+        /* Profit Number Container */
+        .profit-overlay {
+            margin-top: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profit-label {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .profit-number-display {
+            font-size: 5rem; /* Massive on desktop */
+            font-weight: 800;
+            line-height: 0.9;
+            margin-bottom: 10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            /* Money Gradient */
+            background: linear-gradient(180deg, #fff 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 10px 20px rgba(16, 185, 129, 0.3));
+        }
+
+        .profit-source-text {
+            color: var(--primary);
+            font-weight: 600;
+            background: rgba(139, 92, 246, 0.1);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        /* --- COMPARISON --- */
+        .comparison-wrapper { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 50px; }
+        .comp-box { background: #1f2229; padding: 30px; border-radius: 20px; width: 100%; max-width: 320px; border: 1px solid rgba(255,255,255,0.05); opacity: 0.7; transition: 0.3s; }
+        .comp-box:hover { opacity: 1; transform: translateY(-5px); }
+        .comp-box.highlight { background: linear-gradient(145deg, #1f2937, #111827); border: 2px solid var(--primary); opacity: 1; transform: scale(1.02); box-shadow: 0 10px 40px rgba(139, 92, 246, 0.2); position: relative; }
+        .comp-tag { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; font-size: 0.7rem; padding: 6px 14px; border-radius: 20px; font-weight: 700; box-shadow: 0 5px 15px rgba(139,92,246,0.4); }
+
+        /* --- OFFER / STACK --- */
+        .stack-card { background: var(--bg-card); max-width: 600px; margin: 0 auto; border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
+        .stack-header { background: var(--gradient-bg); padding: 30px 20px; text-align: center; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; }
+        .stack-body { padding: 30px 20px; }
+        .stack-item { display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.1); align-items: flex-start; }
+        .stack-item:last-child { border-bottom: none; }
+        .stack-item div:first-child { font-weight: 500; color: #e5e7eb; display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; }
+        .total-area { text-align: center; margin-top: 30px; padding-top: 30px; border-top: 2px solid rgba(255,255,255,0.1); }
+        .final-price { font-size: 3rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 5px; background: linear-gradient(to bottom, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Countdown Timer Styling */
+        .countdown-container {
+            display: flex; justify-content: center; gap: 10px; margin: 15px 0 25px;
+        }
+        .time-box {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 12px; border-radius: 8px; font-family: monospace; font-weight: 700;
+            color: var(--danger); font-size: 1.5rem; min-width: 50px; text-align: center;
+            line-height: 1;
+        }
+        .time-label { font-size: 0.7rem; color: #666; display: block; font-weight: 400; text-transform: uppercase; margin-top: 4px; }
+
+        /* --- FAQ --- */
+        .faq-item { background: var(--bg-card); margin-bottom: 15px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .faq-item summary { padding: 20px; cursor: pointer; font-weight: 600; list-style: none; position: relative; transition: 0.3s; font-size: 0.95rem; }
+        .faq-item summary:hover { background: rgba(255,255,255,0.02); }
+        .faq-item summary::after { content: '+'; position: absolute; right: 20px; color: var(--primary); font-weight: 800; font-size: 1.5rem; top: 50%; transform: translateY(-50%); transition: 0.3s; }
+        .faq-item[open] summary::after { content: '-'; transform: translateY(-50%) rotate(180deg); }
+        .faq-item[open] summary { color: var(--primary); }
+        .faq-item p { padding: 0 20px 20px; color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; }
+
+        /* --- FOOTER --- */
+        footer { background: #000; padding: 60px 0 100px; text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 80px; border-top: 1px solid rgba(255,255,255,0.05); }
+
+        /* --- UTILS --- */
+        .fade-up { opacity: 0; transform: translateY(30px); transition: 0.8s ease-out; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- STICKY MOBILE CTA --- */
+        .sticky-cta {
+            position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;
+            background: rgba(15, 17, 21, 0.98); backdrop-filter: blur(10px);
+            padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1);
+            transform: translateY(100%); transition: transform 0.4s ease;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+        .sticky-cta.show { transform: translateY(0); }
+        .sticky-cta .btn { width: 100%; padding: 14px; font-size: 1rem; }
+
+        /* --- CONFETTI CANVAS --- */
+        #confetti-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Background Ambience -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <!-- Header -->
+    <header id="main-header">
+        <div class="container nav-content">
+            <a href="#" class="logo"><i class="fas fa-rocket" style="color:var(--primary);"></i> ARANIS<span>ECOM</span></a>
+            <a href="#offer" class="btn btn-primary">Dapatkan Prompt</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <span class="hero-tag fade-up">✨ Tool AI Untuk Peniaga Online</span>
+            <h1 class="fade-up">Iklan Tak Jalan? <br><span class="hero-gradient-text">Jom Bagi AI Uruskan.</span></h1>
+            <p class="fade-up">Sakit kepala tengok CPA naik? Relax. Kami ada "Prompt Ajaib" yang boleh jadikan ChatGPT macam Senior Meta ADS ANALYST korang. Senang, cepat, dan tak perlu bayar mahal.</p>
+            
+            <div class="fade-up" style="margin-top: 30px;">
+                <a href="#offer" class="btn btn-primary cta-trigger"><i class="fas fa-sparkles btn-icon"></i> Jom Cuba Sekarang</a>
+                <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fas fa-check-circle" style="color: var(--accent);"></i> Harga sekali bayar je. Tiada subscription.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pain Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="text-center fade-up">Familiar Tak Situasi Ni?</h2>
+            <p class="text-center" style="color: var(--text-muted); max-width: 600px; margin: 10px auto 0;">Jom kita berterus-terang. Kalau korang rasa ni biasa, maksudnya korang perlukan bantuan.</p>
+            
+            <div class="pain-grid">
+                <div class="pain-card fade-up">
+                    <i class="fas fa-fire pain-icon"></i>
+                    <h3>Duit Hangus Je</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem; color: #b0b0b0;">Tak sangka spend dah ratusan-ratus, tapi result tak keluar-keluar. Rasa macam bakar duit depan mata.</p>
+                </div>
+                <div class="pain-card fade-up" style="transition-delay: 0.1s;">
+                    <i class="fas fa-meh pain-icon"></i>
+                    <h3>Penat Tengok Data</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem; color: #b0b0b0;">Tengok Ads Manager dah penat. CPM tinggi, ROAS jatuh. Tahu je ada masalah, tapi tak tahu nak betulkan kat mana.</p>
+                </div>
+                <div class="pain-card fade-up" style="transition-delay: 0.2s;">
+                    <i class="fas fa-user-times pain-icon"></i>
+                    <h3>Agency Mahal Gila</h3>
+                    <p style="margin-top: 10px; font-size: 0.95rem; color: #b0b0b0;">Nak upah expert? Bayar mahal. Nak buat sendiri? Tak tahu jalan. Stuck di tengah-tengah.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Intro -->
+    <section class="section">
+        <div class="container">
+            <div class="solution-box fade-up">
+                <div class="solution-text">
+                    <h2 style="font-size: 1.8rem; margin-bottom: 20px; line-height: 1.2;">Jumpa 'META ADS ANALYST' AI Korang.</h2>
+                    <p style="color: var(--text-muted); margin-bottom: 20px;">
+                        Jangan risau. Korang tak perlu jadi pakar data. Kami dah susun semula ChatGPT supaya faham pasal iklan Meta.
+                    </p>
+                    <p style="color: var(--text-muted);">
+                        Cuma <strong>Copy</strong> data korang, <strong>Paste</strong> dalam prompt ni, dan AI akan bagitahu:
+                    </p>
+                    <ul style="list-style: none; margin-top: 20px; color: var(--text-main);">
+                        <li style="margin-bottom: 12px; display: flex; align-items: flex-start;"><i class="fas fa-check-circle highlight" style="margin-top: 5px; margin-right: 12px;"></i> <span>"Eh, iklan ni creative dia dah penat (fatigue). Tukar la."</span></li>
+                        <li style="margin-bottom: 12px; display: flex; align-items: flex-start;"><i class="fas fa-check-circle highlight" style="margin-top: 5px; margin-right: 12px;"></i> <span>"Audience ni okay, tapi korang under-bayar sikit."</span></li>
+                        <li style="display: flex; align-items: flex-start;"><i class="fas fa-check-circle highlight" style="margin-top: 5px; margin-right: 12px;"></i> <span>"Pause set iklan #3, fokus kat set #5."</span></li>
+                    </ul>
+                </div>
+                <div class="chat-bubble">
+                    <div style="color: #555; font-size: 0.75rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">-- AI Meta Analyst --</div>
+                    <div class="msg msg-ai">
+                        <div id="typing-text"></div><span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SUPER WOW REVIEW SECTION ================= -->
+    <section class="section super-wow-section">
+        <!-- Floating Money Background Elements -->
+        <div class="floating-rm" style="left: 10%; animation-delay: 0s;">RM</div>
+        <div class="floating-rm" style="left: 80%; animation-delay: 2s;">RM</div>
+        <div class="floating-rm" style="left: 50%; animation-delay: 4s;">$$</div>
+        <div class="floating-rm" style="left: 20%; animation-delay: 6s;">RM</div>
+        <div class="floating-rm" style="left: 90%; animation-delay: 1s;">$$</div>
+
+        <div class="container super-visual-wrapper">
+            <div class="text-center fade-up">
+                <div class="super-badge">
+                    <i class="fas fa-trophy"></i> Result: 1 Bulan Full Ads
+                </div>
+                <h2 style="font-size: 2.5rem; margin-bottom: 15px;">User Kami Tak Main-main</h2>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                    Seorang user mengambil Master Prompt ni, terus apply pada account ads dia. 
+                    <strong>30 hari kemudian, ini yang berlaku.</strong>
+                </p>
+            </div>
+
+            <div class="visual-card fade-up" style="margin-top: 40px;">
+                <!-- IMAGE FRAME -->
+                <div class="img-frame">
+                    <!-- Using a placeholder that looks like a dashboard/report -->
+                    <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.1/reveal.webp" alt="Ads Manager Profit Screenshot" class="wow-img zoomable-img">
+                </div>
+
+                <!-- PROFIT OVERLAY -->
+                <div class="profit-overlay">
+                    <div class="profit-label">Total Profit Bersih (1 Bulan)</div>
+                    <!-- Animated Counter with Gradient Text -->
+                    <div class="profit-number-display">
+                        RM <span class="count-up" data-target="68356">0</span>.00
+                    </div>
+                    <div class="profit-source-text">
+                        <i class="fas fa-check-circle"></i> 100% Strategy from AI Prompt
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center" style="margin-top: 30px;">
+                 <a href="#offer" class="btn btn-primary cta-trigger" style="font-size: 1.1rem;">
+                    <i class="fas fa-rocket btn-icon"></i> Saya Nak Profit Macam Ni!
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- ================= END SUPER WOW SECTION ================= -->
+
+    <!-- Lightbox Modal (Hidden by default) -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <div class="lightbox-content">
+            <img src="" alt="Zoomed Image" class="lightbox-img" id="lightbox-img">
+        </div>
+    </div>
+
+    <!-- LIVE TEST JOURNEY SECTION -->
+    <section class="section journey-section">
+        <div class="container">
+            <div class="text-center fade-up">
+                <span style="color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem;">Real Case Study</span>
+                <h2 style="font-size: 2rem; margin-bottom: 15px; margin-top: 10px;">Live Test: 30 Hari Journey</h2>
+                <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+                    Kami tak main-main. Ini adalah journey sebenar iklan Meta yang kami run selama sebulan penuh. 
+                    <span class="highlight">100% keputusan berdasarkan cadangan AI.</span>
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-progress" id="timeline-progress"></div>
+                
+                <!-- DAY 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 1</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> AI Cadangan: Launch & Test</div>
+                        <h4>Analysis Hari Pertama</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">
+                            AI berikan kami Benchmark berdasarkan data HARI PERTAMA, Nilai CPA,CTR.Budget RM100 kami dapat 13 sales. RM7.70 SAHAJA/per Conversion!</p>
+                        <div class="img-grid grid-1">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day1-1.webp" class="journey-img zoomable-img" alt="Day 1 Screenshot">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 2</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: Scale Winner</div>
+                        <h4>Data Masuk, Minta pandangan AI</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">AI sarankan untuk maintain dahulu budget jangan scale. Untuk mengelakkan learning reset. Kami follow pandangn AI</p>
+                        <div class="img-grid grid-3">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day2-1.webp" class="journey-img zoomable-img">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day2-3.webp" class="journey-img zoomable-img">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day2-4.webp" class="journey-img zoomable-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 3</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: SCALE</div>
+                        <h4>Scale buat kali Pertama</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">AI suruh Scale Ads, Naikkan budget. Conversion sampai 17, CPC Hanya RM0.72, Iklan Scale sehinnga 40%</p>
+                        <div class="img-grid grid-1">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day3-1.webp" class="journey-img zoomable-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 4</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: SCALE</div>
+                        <h4>Hasil SCALE Day 3</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">Sales meningkat sehingga 25, CPC masih Rendah, Boleh Scale beserta analysis setiap data</p>
+                        <div class="img-grid grid-2">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day4-1.webp" class="journey-img zoomable-img">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day4-2.webp" class="journey-img zoomable-img">
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- DAY 5 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 5</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: SCALE</div>
+                        <h4>Hasil SCALE Day 4</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">Sales meningkat sehingga 38, CPC masih Rendah, Boleh Scale beserta CPM, menurun drastic jadi Meta dah jumpa audience pocket yang sesuai</p>
+                        <div class="img-grid grid-2">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day5-1.webp" class="journey-img zoomable-img">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day5-2.webp" class="journey-img zoomable-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 7 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 7</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: SCALE</div>
+                        <h4>Nilai Conversion Stable</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">Sales maintain 39-36 sepanjang hari ke 6 dan 7, AI suruh Scale 15-18% untuk naikkan profit,Keputusan AI dibuat berdasarkan analysis data yang kita beri </p>
+                        <div class="img-grid grid-2">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day7-1.webp" class="journey-img zoomable-img">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day7-2.webp" class="journey-img zoomable-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 8-19 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 8-19</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: SCALE</div>
+                        <h4>Fast Forward, Scale, Hold, Setiap Hari PROFIT!</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">Sepanjang day 8 ke 19 semuanya smooth mengikut cadangan AI, ADS profitable. Action semua berdasarkan cadangan AI, hold budget, maintain dan scale. Tapi next day ada unexpected berlaku</p>
+                    </div>
+                </div>
+
+                <!-- DAY 20 (The Crisis) - YouTube Video Integrated -->
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background: #ef4444; border-color: #000;"></div>
+                    <div class="journey-card" style="border-color: rgba(239,68,68,0.3);">
+                        <div class="day-badge" style="background: rgba(239,68,68,0.2); color: #ef4444;">Day 20 - KRISIS!</div>
+                        <div class="ai-badge" style="background: rgba(239,68,68,0.1); color: #ef4444; border-color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> AI Alert: Creative Fatigue</div>
+                        <h4>Performance Jatuh!</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">CPR NAIK! SPEND RM481 tapi SALES 26 sahaja!. AI detect 'Creative Fatigue'. Suggest Turunkan BUDGET, Buat Creatives baru! Saya terus apply fix baru: <strong>Turnkan Budget, Sediakan Creatives baru</strong></p>
+                        
+                        <!-- YouTube Embed -->
+                        <div class="video-wrapper">
+                            <iframe width="560" height="315" src="https://www.youtube.com/embed/XrpcI00-4Cs?si=-dENVpyxVZwwDS0F" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 21 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 21</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: Maintain</div>
+                        <h4>Fix telah dibuat</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">CPR Masih lagi tinggi, tapi AI minta suruh maintain budget sehingga creatives baru selesai. Kesalahan besar dari pihak saya tidak sediakan creatives lebih awal. jadi perfomance drop walaupun AI sudah bagi warning creatives akan FATIGUE</p>
+                    </div>
+                </div>
+
+                <!-- DAY 29 -->
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="journey-card">
+                        <div class="day-badge">Day 29</div>
+                        <div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: SCALE</div>
+                        <h4>Creatives ditambah dan Scale UP</h4>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">CPR Stable, SPEND RM748 sales 66, Profitable! AI suruh Scale lagi!</p>
+                        <div class="img-grid grid-2">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day29-1.webp" class="journey-img zoomable-img">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day29-2.webp" class="journey-img zoomable-img">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DAY 30 (Result) -->
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background: var(--accent); border-color: #000; box-shadow: 0 0 20px var(--accent);"></div>
+                    <div class="journey-card" style="background: linear-gradient(145deg, #064e3b 0%, #111827 100%); border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(52,211,153,0.1);">
+                        <div class="day-badge" style="background: var(--accent); color: #000;">Day 30 - RESULT</div>
+                        <div class="ai-badge" style="background: rgba(52,211,153,0.15); color: var(--accent); border-color: var(--accent);"><i class="fas fa-check-circle"></i> Mission Accomplished</div>
+                        <h4 style="color: var(--accent); font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3;">
+                            Conversion: RM<span class="count-up" data-target="28614">0</span><br>
+                            CPC RM1.04 <br>
+                            Sales <span class="count-up" data-target="957">0</span>! <br>
+                            Profit RM10K+
+                        </h4>
+                        <p style="font-size: 0.9rem; color: #d1fae5;">Account ads Manager baharu, Day 1- RM100 budget, Day-30 Sales Hampir RM 30,000 . Ini bukan kebetulan. Ini adalah hasil strategi AI yang konsisten.</p>
+                        <div class="img-grid grid-1">
+                            <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day30.webp" class="journey-img zoomable-img" style="height: 150px;"> 
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AKHIR-->
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background: var(--accent); border-color: #000; box-shadow: 0 0 20px var(--accent);"></div>
+                    <div class="journey-card" style="background: linear-gradient(145deg, #3538e6 0%, #111827 100%); border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(52,211,153,0.1);">
+                        <div class="day-badge" style="background: var(--accent); color: #000;">Untuk Pengetahuan</div>
+                        <div class="ai-badge" style="background: rgba(183, 212, 13, 0.15); color: var(--accent); border-color: var(--accent);"><i class="fas fa-check-circle"></i> Mission Pending</div>
+                        <h4 style="color: var(--accent); font-size: 1.2rem; margin-bottom: 10px;">ADS ini JUGA DIKUASAKAN OLEH PROMPT META ADS ANALYST YANG ANDA TENGAH LIHAT</h4>
+                        <p style="font-size: 0.9rem; color: #d1fae5;">Segala Keputusan daripada AI digunakan sepenuhnya untuk RUN META ADS YANG ANDA LIHAT SEKARANG!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- Comparison Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="text-center fade-up" style="margin-bottom: 10px;">Kalau Tak Pakai AI vs Kalau Pakai</h2>
+            <p class="text-center fade-up" style="color:var(--text-muted);">Pilihan ada di tangan anda.</p>
+            
+            <div class="comparison-wrapper">
+                <!-- Tanpa AI -->
+                <div class="comp-box fade-up">
+                    <h3 style="margin-bottom: 25px; text-decoration: line-through; color: #6b7280;">Cara Lama</h3>
+                    <ul style="list-style: none; color: #a3a3a3;">
+                        <li style="margin-bottom: 18px; display: flex; align-items: center;"><i class="fas fa-times" style="color: #ef4444; margin-right: 12px; font-size: 1.1rem;"></i> Trial & error siang malam.</li>
+                        <li style="margin-bottom: 18px; display: flex; align-items: center;"><i class="fas fa-times" style="color: #ef4444; margin-right: 12px; font-size: 1.1rem;"></i> Bayar agency RM3k-RM5k.</li>
+                        <li style="display: flex; align-items: center;"><i class="fas fa-times" style="color: #ef4444; margin-right: 12px; font-size: 1.1rem;"></i> Tekanan dan stress.</li>
+                    </ul>
+                </div>
+
+                <!-- Dengan AI -->
+                <div class="comp-box highlight fade-up" style="transition-delay: 0.2s;">
+                    <div class="comp-tag">Pilihan Pintar</div>
+                    <h3 style="margin-bottom: 25px;">Meta Analyst AI</h3>
+                    <ul style="list-style: none; color: #e5e7eb;">
+                        <li style="margin-bottom: 18px; display: flex; align-items: center;"><i class="fas fa-check-circle" style="color: var(--accent); margin-right: 12px; font-size: 1.1rem;"></i> Dapat nasihat dalam 10 saat.</li>
+                        <li style="margin-bottom: 18px; display: flex; align-items: center;"><i class="fas fa-check-circle" style="color: var(--accent); margin-right: 12px; font-size: 1.1rem;"></i> Harga sekali bayar murah je.</li>
+                        <li style="display: flex; align-items: center;"><i class="fas fa-check-circle" style="color: var(--accent); margin-right: 12px; font-size: 1.1rem;"></i> Fokus tengok sales naik.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Offer -->
+    <section class="section" id="offer">
+        <div class="container">
+            <div class="stack-card fade-up">
+                <div class="stack-header">
+                    Eksklusif: Meta Analyst AI
+                </div>
+                <div class="stack-body">
+                    
+                    <!-- 1. Master Prompt -->
+                    <div class="stack-item">
+                        <div><i class="fas fa-robot" style="color: var(--primary); margin-top: 4px;"></i> <div>Master Prompt "Meta Analyst"</div></div>
+                        <div style="color: var(--text-muted);">Nilai: RM300</div>
+                    </div>
+
+                    <!-- 2. Akses Channel Telegram -->
+                    <div class="stack-item">
+                        <div><i class="fab fa-telegram" style="color: #0088cc; margin-top: 4px;"></i> <div>Akses Channel Telegram</div></div>
+                        <div style="color: var(--text-muted);">Nilai: RM50</div>
+                    </div>
+
+                    <!-- 3. Cheat Sheet Data Wajib -->
+                    <div class="stack-item">
+                        <div><i class="fas fa-list-check" style="color: var(--primary); margin-top: 4px;"></i> <div>Cheat Sheet Data ROAS Tinggi</div></div>
+                        <div style="color: var(--text-muted);">Nilai: RM10</div>
+                    </div>
+
+                    <!-- 4. Video Guide -->
+                    <div class="stack-item">
+                        <div><i class="fas fa-video" style="color: var(--primary); margin-top: 4px;"></i> <div>Video: Setup Prompt & Audit Meta</div></div>
+                        <div style="color: var(--text-muted);">Nilai: RM50</div>
+                    </div>
+
+                    <div class="total-area">
+                        <div style="color: var(--text-muted); margin-bottom: 5px;">Jumlah Semua: <span class="strike">RM410</span></div>
+                        <div class="final-price">RM35.90 </div>
+                        
+                        <!-- Countdown Timer -->
+                        <div style="margin-top:10px; font-size: 0.9rem; color: #888;">Harga Tamat Dalam:</div>
+                        <div class="countdown-container" id="countdown">
+                            <div class="time-box"><span id="mins">00</span><span class="time-label">Minit</span></div>
+                            <div class="time-box"><span id="secs">00</span><span class="time-label">Saat</span></div>
+                        </div>
+
+                        <div style="color: var(--accent); font-weight: 700; font-size: 0.9rem; margin: 15px 0 25px; background: rgba(52,211,153,0.1); display: inline-block; padding: 5px 15px; border-radius: 10px;">TERHAD UNTUK 15 USER TERAWAL</div>
+                        
+                        <a href="#" class="btn btn-primary cta-trigger" style="width: 100%; padding: 16px 0; font-size: 1.1rem;">Nak Satu Sekarang!</a>
+                        
+                        <p style="font-size: 0.8rem; margin-top: 20px; color: #666;"><i class="fas fa-lock"></i> Pembayaran Selamat via FPX/TOYYIBPAY</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+        <div class="container" style="max-width: 700px;">
+            <h2 class="text-center" style="margin-bottom: 40px;">Soalan Lazim (FAQ)</h2>
+            
+            <details class="faq-item">
+                <summary>Saya tak pandai guna AI, boleh ke?</summary>
+                <p>Sangat boleh! Kami bagi video tutorial pendek je. Korang cuma perlu tahu 'Copy' dan 'Paste'. Susah pun kami ajar sampai jadi.</p>
+            </details>
+            
+            <details class="faq-item">
+                <summary>Perlukan ChatGPT berbayar ke?</summary>
+                <p>Result yang kami tunjukkan kat atas semua menggunakan CHATGPT free, cuma perlu login sahaja, Tapi kalau anda ada yang berbayar satu bonus! mungkin boleh achieve profit lebih besar!</p>
+            </details>
+            
+            <details class="faq-item">
+                <summary>Lepas Payment apa perlu buat?</summary>
+                <p>Setelah selesai payment dan kembali ke thankyou page, email akan dihantar dalam 3minit hingga 10minit boleh semak mengunakan kata kunci 'ARANIS'</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Susah tak nak setup?</summary>
+                <p>Sangat senang, hanya copy dan paste sahaja encrypted master prompt yang kami berikan, video guide disediakan sekali jangan risau.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Sekali dengan cara setting META ADS tak?</summary>
+                <p>Kami sediakan sekali video untuk setting key metrics(Data) ADS MANAGER yang perlu dimasukkan ke chatgpt</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Berkesan ke prompt ni?</summary>
+                <p>Kami sendiri dah hasilkan lebih RM200K profit dalam masa 3bulan sahaja guna prompt ni, dari Zero , tak pernah guna meta ads sampai lah boleh achieve result, digital product, physical product dan servis sekali.</p>
+            </details>
+
+            <details class="faq-item">
+                <summary>Cara nak launch ads/setting ads ada sekali ke macam target, campaign, creatives berapa dan lain2?</summary>
+                <p>Mesti peningkan nak set semua tu? apa yang betul apa yang tak? sebabtu kami sediakan master prompt meta analyst ni, tanya sahaja, dia akan jawab dengan detail beserta reason.</p>
+            </details>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <h3 style="color: white; margin-bottom: 10px;">ARANIS ECOM HUB</h3>
+            <p>Bantu peniaga online scale bisnes dengan AI.</p>
+            <div style="margin: 25px 0; display: flex; justify-content: center; gap: 20px;">
+                <a href="#" style="color: #666; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#666'">Privacy</a>
+                <a href="#" style="color: #666; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#666'">Terms</a>
+                <a href="#" style="color: #666; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='#666'">Contact</a>
+            </div>
+            <p style="font-size: 0.8rem; opacity: 0.4;">© 2024 Aranis Ecom Hub. Hak cipta terpelihara.</p>
+        </div>
+    </footer>
+
+    <!-- Sticky CTA (Mobile) -->
+    <div class="sticky-cta" id="sticky-cta">
+        <a href="#offer" class="btn btn-primary cta-trigger"><i class="fas fa-shopping-cart btn-icon"></i> Beli Sekarang - RM35.90</a>
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Scroll Animation Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        // Special handling for timeline items to trigger staggered animation
+                        if(entry.target.classList.contains('timeline-item')) {
+                            entry.target.classList.add('active');
+                        }
+                        
+                        // Trigger Counters if inside view
+                        if(entry.target.querySelector('.count-up')) {
+                            startCounters(entry.target);
+                        }
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            document.querySelectorAll('.fade-up, .timeline-item, .journey-card, .visual-card').forEach(el => observer.observe(el));
+
+            // 2. Timeline Progress Bar Logic
+            const timelineSection = document.querySelector('.timeline');
+            const progressBar = document.getElementById('timeline-progress');
+            
+            window.addEventListener('scroll', () => {
+                if(!timelineSection || !progressBar) return;
+                
+                const rect = timelineSection.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                // Calculate how far we've scrolled into the timeline section
+                // Start when top of section hits middle of screen
+                let startPoint = rect.top + (rect.height * 0.1); 
+                let progress = windowHeight - startPoint;
+                
+                // Calculate percentage (0 to 100)
+                let percentage = (progress / (rect.height * 0.9)) * 100;
+                
+                if (percentage < 0) percentage = 0;
+                if (percentage > 100) percentage = 100;
+                
+                progressBar.style.height = percentage + '%';
+            });
+
+            // 3. Typewriter Effect for Solution Chat
+            const textToType = "Status: CPA Tinggi (RM45).\nAnalisis: CTR rendah (1.2%). Maksudnya orang tak klik gambar korang.\nCadangan: Tukar 'Hook' pada video tu. Cuba angle 'Masalah & Penyelesaian'.";
+            const typeContainer = document.getElementById('typing-text');
+            let typeIndex = 0;
+            
+            function typeWriter() {
+                if (typeIndex < textToType.length) {
+                    const char = textToType.charAt(typeIndex);
+                    typeContainer.innerHTML += char === '\n' ? '<br>' : char;
+                    typeIndex++;
+                    setTimeout(typeWriter, Math.random() * 30 + 30); // Random typing speed for realism
+                }
+            }
+
+            // Trigger typing when solution box is visible
+            const solutionBox = document.querySelector('.solution-box');
+            const typeObserver = new IntersectionObserver((entries) => {
+                if(entries[0].isIntersecting && typeIndex === 0) {
+                    typeWriter();
+                }
+            }, { threshold: 0.5 });
+            
+            typeObserver.observe(solutionBox);
+
+            // 4. Header & Sticky CTA Scroll Effect
+            const header = document.getElementById('main-header');
+            const stickyCta = document.getElementById('sticky-cta');
+            const offerSection = document.getElementById('offer');
+            
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                
+                // Header blur
+                if(scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+
+                // Sticky CTA visibility logic
+                // Show after hero, hide when near footer or already in offer
+                const heroHeight = document.querySelector('.hero').offsetHeight;
+                const offerRect = offerSection.getBoundingClientRect();
+
+                if (scrollY > heroHeight && offerRect.top > window.innerHeight - 100) {
+                    stickyCta.classList.add('show');
+                } else {
+                    stickyCta.classList.remove('show');
+                }
+            });
+
+            // 5. Lightbox Logic
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const closeBtn = document.querySelector('.lightbox-close');
+            const zoomableImages = document.querySelectorAll('.zoomable-img');
+
+            zoomableImages.forEach(img => {
+                img.addEventListener('click', (e) => {
+                    lightbox.classList.add('active');
+                    lightboxImg.src = img.src;
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeLightbox() {
+                lightbox.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+
+            closeBtn.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) closeLightbox();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+            });
+
+            // 6. Countdown Timer (Fake Urgency Loop)
+            let totalSeconds = 900; // 15 mins loop
+            const minsEl = document.getElementById('mins');
+            const secsEl = document.getElementById('secs');
+
+            setInterval(() => {
+                totalSeconds--;
+                if (totalSeconds < 0) totalSeconds = 900; // Reset loop
+                
+                const m = Math.floor(totalSeconds / 60);
+                const s = totalSeconds % 60;
+                
+                minsEl.textContent = m.toString().padStart(2, '0');
+                secsEl.textContent = s.toString().padStart(2, '0');
+            }, 1000);
+
+            // 7. Number Counter Animation
+            function startCounters(section) {
+                const counters = section.querySelectorAll('.count-up');
+                if(counters.length === 0) return;
+
+                counters.forEach(counter => {
+                    // Check if already counted to prevent re-animation
+                    if (counter.getAttribute('data-counted') === 'true') return;
+
+                    const target = +counter.getAttribute('data-target');
+                    const duration = 2000; // 2 seconds
+                    const increment = target / (duration / 16); 
+                    
+                    let current = 0;
+                    const updateCounter = () => {
+                        current += increment;
+                        if(current < target) {
+                            counter.innerText = Math.ceil(current).toLocaleString();
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.innerText = target.toLocaleString();
+                            counter.setAttribute('data-counted', 'true');
+                        }
+                    };
+                    updateCounter();
+                });
+            }
+
+            // 8. Confetti Effect (Simple Canvas Implementation)
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            function createParticle(x, y) {
+                const colors = ['#8b5cf6', '#3b82f6', '#34d399', '#f472b6', '#fbbf24'];
+                return {
+                    x: x,
+                    y: y,
+                    size: Math.random() * 8 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedX: Math.random() * 6 - 3,
+                    speedY: Math.random() * -6 - 2,
+                    gravity: 0.2,
+                    life: 100
+                };
+            }
+
+            function updateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particles.length; i++) {
+                    let p = particles[i];
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+                    p.speedY += p.gravity;
+                    p.life--;
+                    
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (p.life <= 0) {
+                        particles.splice(i, 1);
+                        i--;
+                    }
+                }
+                requestAnimationFrame(updateParticles);
+            }
+            updateParticles();
+
+            // Trigger Confetti on specific buttons
+            document.querySelectorAll('.cta-trigger').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Get click coordinates
+                    const rect = btn.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+
+                    // Spawn 50 particles
+                    for(let i=0; i<50; i++) {
+                        particles.push(createParticle(centerX, centerY));
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

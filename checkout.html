@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- INHERITED STYLES --- */
+        /* --- STYLES --- */
         :root {
             --bg-dark: #0f1115;
             --bg-card: #181b21;
@@ -15,12 +15,10 @@
             --primary-glow: rgba(139, 92, 246, 0.5);
             --secondary: #3b82f6;
             --accent: #34d399;
-            --money: #10b981;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --danger: #ef4444;
             --gradient-bg: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
-            --gradient-text: linear-gradient(90deg, #c084fc, #60a5fa);
             --radius: 20px;
             --input-bg: rgba(255, 255, 255, 0.03);
             --input-border: rgba(255, 255, 255, 0.1);
@@ -37,13 +35,11 @@
             display: flex; flex-direction: column;
         }
 
-        /* Background Ambience */
         .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.3; pointer-events: none; }
         .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
         .orb-2 { width: 300px; height: 300px; background: var(--secondary); bottom: 0; right: -50px; }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; width: 100%; }
-        .text-gradient { background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         /* Buttons */
         .btn {
@@ -57,13 +53,14 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--primary-glow); }
         .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-        /* --- CHECKOUT STYLES --- */
+        /* Header */
         header { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(15, 17, 21, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
         .nav-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; font-size: 1.2rem; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
         .back-link:hover { color: white; }
 
+        /* Layout */
         .checkout-layout {
             display: grid;
             grid-template-columns: 1fr 1.5fr;
@@ -114,16 +111,15 @@
         }
         .form-input:focus { outline: none; border-color: var(--primary); background: rgba(139, 92, 246, 0.05); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
         .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
-        .form-input.success { border-color: var(--accent); }
 
-        /* Professional Guide / Helper Text */
+        /* Helper Text */
         .helper-text {
             display: block; margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);
             display: flex; align-items: flex-start; gap: 5px;
         }
         .helper-text i { color: var(--secondary); margin-top: 3px; font-size: 0.7rem; }
 
-        /* NEW: Simple & Professional Payment Box */
+        /* Payment Box */
         .payment-method-display {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--primary);
@@ -136,12 +132,10 @@
             position: relative;
             overflow: hidden;
         }
-        /* Subtle glow effect on payment box */
         .payment-method-display::before {
             content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
             background: var(--gradient-bg);
         }
-
         .pay-left { display: flex; align-items: center; gap: 20px; z-index: 1; }
         .pay-icon-circle {
             width: 50px; height: 50px; border-radius: 50%;
@@ -152,12 +146,8 @@
         }
         .pay-text h4 { font-size: 1.1rem; margin-bottom: 4px; color: white; }
         .pay-text p { font-size: 0.8rem; color: var(--text-muted); }
+        .pay-right { color: var(--text-muted); font-size: 1.2rem; }
 
-        .pay-right { 
-            color: var(--text-muted); font-size: 1.2rem;
-        }
-
-        /* Trust Badge */
         .trust-badge { 
             margin-top: 25px; padding: 15px; background: rgba(16, 185, 129, 0.05); 
             border: 1px solid rgba(16, 185, 129, 0.1); border-radius: 12px; 
@@ -266,7 +256,7 @@
 
                     <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 25px 0;">
 
-                    <!-- FPX Only Payment (Simple & Professional) -->
+                    <!-- FPX Only Payment -->
                     <h3 style="margin-bottom: 15px;">Kaedah Pembayaran</h3>
                     
                     <div class="payment-method-display">
@@ -305,8 +295,7 @@
 
     <!-- Javascript Logic -->
     <script>
-        // 1. Form Validation Logic
-        document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Reset errors
@@ -317,23 +306,22 @@
             const phone = document.getElementById('phone').value.trim();
             let isValid = true;
 
-            // Validate Name (Not empty)
+            // Validate Name
             if(name === "") {
                 showError('name', "Sila masukkan nama anda.");
                 isValid = false;
             }
 
-            // Validate Email (Format)
+            // Validate Email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if(!emailRegex.test(email)) {
                 showError('email', "Format e-mel tidak sah. Contoh: user@gmail.com");
                 isValid = false;
             }
 
-            // Validate Phone (Malaysia Format: Starts with 01, length 10-11 digits)
-            // Remove spaces and dashes for logic check, but allow user to type them freely
+            // Validate Phone (Malaysia: Starts with 01, length 10-11 digits)
             const cleanPhone = phone.replace(/[\s-]/g, '');
-            const phoneRegex = /^01\d{8,9}$/; // Starts with 01, followed by 8 or 9 digits
+            const phoneRegex = /^01\d{8,9}$/; 
             
             if(!phoneRegex.test(cleanPhone)) {
                 showError('phone', "Nombor telefon tidak sah. Pastikan bermula dengan '01' dan 10-11 digit.");
@@ -341,22 +329,19 @@
             }
 
             if(isValid) {
-                processPayment({ name, email, phone });
+                await processOrder({ name, email, phone });
             }
         });
 
         function showError(fieldId, message) {
             const input = document.getElementById(fieldId);
             input.classList.add('error');
-            
-            // Find helper text and show error message temporarily
             let helper = input.nextElementSibling;
             const originalText = helper.innerHTML;
             
             helper.innerHTML = `<i class="fas fa-exclamation-circle" style="color:var(--danger)"></i> ${message}`;
             helper.style.color = "var(--danger)";
             
-            // Revert message after 4 seconds
             setTimeout(() => {
                 helper.innerHTML = originalText;
                 helper.style.color = "var(--text-muted)";
@@ -364,8 +349,7 @@
             }, 4000);
         }
 
-        // 2. API Integration Logic
-        function processPayment(data) {
+        async function processOrder(data) {
             const btn = document.getElementById('pay-btn');
             const spinner = document.getElementById('btn-spinner');
             const btnText = document.getElementById('btn-text');
@@ -374,52 +358,455 @@
             // UI Loading State
             btn.disabled = true;
             spinner.style.display = 'inline-block';
-            btnText.innerText = 'Memproses Pesanan...';
+            btnText.innerText = 'Memproses...';
             btnIcon.style.display = 'none';
 
-            // Prepare Data Payload
-            const payload = {
-                ...data,
-                product_name: "Meta Analyst AI",
-                amount: "35.90",
-                currency: "MYR",
-                payment_method: "FPX"
-            };
+            try {
+                // CALL YOUR BACKEND API
+                const response = await fetch('/api/create-bill', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: data.name,
+                        email: data.email,
+                        phone: data.phone,
+                        amount: 35.90,
+                        billDescription: 'Master Prompt: Meta Analyst AI'
+                    })
+                });
 
-            console.log("Sending Payload:", payload);
+                const result = await response.json();
 
-            // ----------------------------------------------------
-            // REPLACE BLOCK BELOW WITH YOUR ACTUAL API CALL
-            // ----------------------------------------------------
-            
-            /* 
-            fetch('https://your-api.com/checkout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.payment_url) {
-                    window.location.href = data.payment_url;
-                } else {
-                    resetButton();
-                    alert("Gagal membuat sambungan. Sila cuba lagi.");
+                if (!response.ok) {
+                    throw new Error(result.error || 'Server error');
                 }
-            })
-            .catch(err => {
-                resetButton();
-                alert("Ralat sistem.");
-            });
-            */
 
-            // MOCK SIMULATION
-            setTimeout(() => {
-                alert(`Maklumat Diterima:\nNama: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\n\n(Demo: Redirecting to FPX...)`);
+                if (result.success && result.billUrl) {
+                    // Redirect to ToyyibPay
+                    window.location.href = result.billUrl;
+                } else {
+                    throw new Error('Gagal menjana bil pembayaran.');
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert(err.message || "Sila cuba lagi.");
                 resetButton();
-                // window.location.href = "https://payment-gateway-url...";
-            }, 2000);
-            // ----------------------------------------------------
+            }
+        }
+
+        function resetButton() {
+            const btn = document.getElementById('pay-btn');
+            const spinner = document.getElementById('btn-spinner');
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+
+            btn.disabled = false;
+            spinner.style.display = 'none';
+            btnText.innerText = 'Bayar RM35.90';
+            btnIcon.style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Meta Ads AI | ARANIS ECOM HUB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- STYLES --- */
+        :root {
+            --bg-dark: #0f1115;
+            --bg-card: #181b21;
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.5);
+            --secondary: #3b82f6;
+            --accent: #34d399;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --danger: #ef4444;
+            --gradient-bg: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --radius: 20px;
+            --input-bg: rgba(255, 255, 255, 0.03);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --input-focus: rgba(139, 92, 246, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            line-height: 1.6; 
+            min-height: 100vh; 
+            display: flex; flex-direction: column;
+        }
+
+        .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.3; pointer-events: none; }
+        .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: var(--secondary); bottom: 0; right: -50px; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; width: 100%; }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 18px 32px; border-radius: 50px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; text-decoration: none; transition: all 0.3s;
+            border: none; cursor: pointer; width: 100%; font-size: 1rem;
+            background: var(--gradient-bg); color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--primary-glow); }
+        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        /* Header */
+        header { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(15, 17, 21, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.2rem; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
+        .back-link:hover { color: white; }
+
+        /* Layout */
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            margin-top: 40px;
+            margin-bottom: 80px;
+            align-items: start;
+        }
+
+        .checkout-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        /* Order Summary */
+        .order-item { display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+        .item-thumb { width: 70px; height: 70px; background: linear-gradient(135deg, #2d3748, #1a202c); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--primary); border: 1px solid rgba(255,255,255,0.05); }
+        .item-details h4 { font-size: 1rem; margin-bottom: 5px; color: #fff; }
+        .item-details p { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .price-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; color: var(--text-muted); }
+        .price-row.final { margin-top: 20px; padding-top: 20px; border-top: 2px solid rgba(255,255,255,0.1); color: white; font-weight: 700; font-size: 1.2rem; }
+        .highlight-price { color: var(--accent); font-size: 1.5rem; }
+        .strike { text-decoration: line-through; color: #555; font-size: 0.85rem; }
+
+        /* Form Elements */
+        .input-group { margin-bottom: 25px; position: relative; }
+        .input-group label { 
+            display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); 
+            margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; 
+            display: flex; align-items: center; gap: 6px;
+        }
+        .required-mark { color: var(--danger); font-size: 0.8rem; }
+        
+        .form-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s;
+        }
+        .form-input:focus { outline: none; border-color: var(--primary); background: rgba(139, 92, 246, 0.05); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
+        .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
+
+        /* Helper Text */
+        .helper-text {
+            display: block; margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);
+            display: flex; align-items: flex-start; gap: 5px;
+        }
+        .helper-text i { color: var(--secondary); margin-top: 3px; font-size: 0.7rem; }
+
+        /* Payment Box */
+        .payment-method-display {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .payment-method-display::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--gradient-bg);
+        }
+        .pay-left { display: flex; align-items: center; gap: 20px; z-index: 1; }
+        .pay-icon-circle {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(139, 92, 246, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; color: var(--primary);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+        .pay-text h4 { font-size: 1.1rem; margin-bottom: 4px; color: white; }
+        .pay-text p { font-size: 0.8rem; color: var(--text-muted); }
+        .pay-right { color: var(--text-muted); font-size: 1.2rem; }
+
+        .trust-badge { 
+            margin-top: 25px; padding: 15px; background: rgba(16, 185, 129, 0.05); 
+            border: 1px solid rgba(16, 185, 129, 0.1); border-radius: 12px; 
+            display: flex; align-items: center; gap: 12px; justify-content: center;
+            color: var(--accent); font-size: 0.85rem; font-weight: 600;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: white;
+            animation: spin 0.8s linear infinite; margin-right: 10px; display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .checkout-layout { grid-template-columns: 1fr; gap: 30px; margin-top: 20px; }
+            .order-summary-card { order: -1; }
+            .checkout-card { padding: 20px; }
+            .payment-method-display { flex-direction: column; text-align: center; gap: 15px; }
+            .pay-left { flex-direction: column; }
+            .highlight-price { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-content">
+            <a href="#" class="logo"><i class="fas fa-rocket" style="color:var(--primary);"></i> ARANIS<span>ECOM</span></a>
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Kembali ke Utama</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="checkout-layout">
+            
+            <!-- LEFT: Order Summary -->
+            <aside class="checkout-card order-summary-card">
+                <h3 style="margin-bottom: 20px;">Ringkasan Pesanan</h3>
+                
+                <div class="order-item">
+                    <div class="item-thumb"><i class="fas fa-brain"></i></div>
+                    <div class="item-details">
+                        <h4>Master Prompt: Meta Analyst AI</h4>
+                        <p>Akses Seumur Hidup + Video Guide + Telegram</p>
+                    </div>
+                </div>
+
+                <div class="price-row">
+                    <span>Jumlah Asal</span>
+                    <span class="strike">RM410.00</span>
+                </div>
+                <div class="price-row">
+                    <span>Diskaun Promosi</span>
+                    <span style="color: var(--danger);">-RM374.10</span>
+                </div>
+                
+                <div class="price-row final">
+                    <span>Jumlah Bayar</span>
+                    <span class="highlight-price">RM35.90</span>
+                </div>
+
+                <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 10px;">
+                    Termasuk cukai SST (0%)
+                </div>
+
+                <div class="trust-badge">
+                    <i class="fas fa-shield-alt"></i> Transaksi Selamat & Disulitkan (256-bit SSL)
+                </div>
+            </aside>
+
+            <!-- RIGHT: Form Details -->
+            <main class="checkout-card">
+                <h3 style="margin-bottom: 5px;">Butiran Pelanggan</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Sila isi maklumat dengan betul untuk penghantaran produk.</p>
+                
+                <form id="checkout-form" novalidate>
+                    
+                    <!-- Name Input -->
+                    <div class="input-group">
+                        <label for="name">Nama <span class="required-mark">*</span></label>
+                        <input type="text" class="form-input" id="name" name="name" placeholder="Contoh: Ahmad" required>
+                        <small class="helper-text"><i class="fas fa-info-circle"></i> Nama anda untuk tujuan pengenalan.</small>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="input-group">
+                        <label for="email">E-mel <span class="required-mark">*</span></label>
+                        <input type="email" class="form-input" id="email" name="email" placeholder="contoh: email@gmail.com" required>
+                        <small class="helper-text"><i class="fas fa-envelope-open-text"></i> Produk & Katalaluan akan dihantar ke e-mel ini.</small>
+                    </div>
+
+                    <!-- Phone Input -->
+                    <div class="input-group">
+                        <label for="phone">Nombor Telefon (Malaysia) <span class="required-mark">*</span></label>
+                        <input type="tel" class="form-input" id="phone" name="phone" placeholder="Contoh: 0123456789" maxlength="15" required>
+                        <small class="helper-text"><i class="fas fa-mobile-alt"></i> Format Malaysia (01XXXXXXXXX). Untuk update status pesanan.</small>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 25px 0;">
+
+                    <!-- FPX Only Payment -->
+                    <h3 style="margin-bottom: 15px;">Kaedah Pembayaran</h3>
+                    
+                    <div class="payment-method-display">
+                        <div class="pay-left">
+                            <div class="pay-icon-circle">
+                                <i class="fas fa-building-columns"></i>
+                            </div>
+                            <div class="pay-text">
+                                <h4>FPX Online Banking</h4>
+                                <p>Pembayaran selamat & pantas terus ke akaun bank anda.</p>
+                            </div>
+                        </div>
+                        <div class="pay-right">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden Input for Gateway -->
+                    <input type="hidden" name="payment_method" value="fpx">
+
+                    <!-- Submit Action -->
+                    <div style="margin-top: 35px;">
+                        <button type="submit" class="btn" id="pay-btn">
+                            <span class="spinner" id="btn-spinner"></span>
+                            <span id="btn-text">Bayar RM35.90</span>
+                            <i class="fas fa-chevron-right" style="margin-left: 8px;" id="btn-icon"></i>
+                        </button>
+                        <p style="text-align: center; margin-top: 15px; font-size: 0.8rem; color: #666;">
+                            Dengan klik "Bayar", anda bersetuju dengan <a href="#" style="color: var(--text-muted); text-decoration: underline;">Terma Perkhidmatan</a> kami.
+                        </p>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <!-- Javascript Logic -->
+    <script>
+        document.getElementById('checkout-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Reset errors
+            document.querySelectorAll('.form-input').forEach(input => input.classList.remove('error'));
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            let isValid = true;
+
+            // Validate Name
+            if(name === "") {
+                showError('name', "Sila masukkan nama anda.");
+                isValid = false;
+            }
+
+            // Validate Email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!emailRegex.test(email)) {
+                showError('email', "Format e-mel tidak sah. Contoh: user@gmail.com");
+                isValid = false;
+            }
+
+            // Validate Phone (Malaysia: Starts with 01, length 10-11 digits)
+            const cleanPhone = phone.replace(/[\s-]/g, '');
+            const phoneRegex = /^01\d{8,9}$/; 
+            
+            if(!phoneRegex.test(cleanPhone)) {
+                showError('phone', "Nombor telefon tidak sah. Pastikan bermula dengan '01' dan 10-11 digit.");
+                isValid = false;
+            }
+
+            if(isValid) {
+                await processOrder({ name, email, phone });
+            }
+        });
+
+        function showError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            input.classList.add('error');
+            let helper = input.nextElementSibling;
+            const originalText = helper.innerHTML;
+            
+            helper.innerHTML = `<i class="fas fa-exclamation-circle" style="color:var(--danger)"></i> ${message}`;
+            helper.style.color = "var(--danger)";
+            
+            setTimeout(() => {
+                helper.innerHTML = originalText;
+                helper.style.color = "var(--text-muted)";
+                input.classList.remove('error');
+            }, 4000);
+        }
+
+        async function processOrder(data) {
+            const btn = document.getElementById('pay-btn');
+            const spinner = document.getElementById('btn-spinner');
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+
+            // UI Loading State
+            btn.disabled = true;
+            spinner.style.display = 'inline-block';
+            btnText.innerText = 'Memproses...';
+            btnIcon.style.display = 'none';
+
+            try {
+                // CALL YOUR BACKEND API
+                const response = await fetch('/api/create-bill', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: data.name,
+                        email: data.email,
+                        phone: data.phone,
+                        amount: 35.90,
+                        billDescription: 'Master Prompt: Meta Analyst AI'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Server error');
+                }
+
+                if (result.success && result.billUrl) {
+                    // Redirect to ToyyibPay
+                    window.location.href = result.billUrl;
+                } else {
+                    throw new Error('Gagal menjana bil pembayaran.');
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert(err.message || "Sila cuba lagi.");
+                resetButton();
+            }
         }
 
         function resetButton() {

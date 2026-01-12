@@ -1,86 +1,88 @@
-// === NO IMPORTS NEEDED ===
-// No library needed here.
+// ==========================================
+// === CONFIGURATION ===
+// ==========================================
+// This file only handles the ToyyibPay request.
+// The Frontend (checkout.html) handles saving to Supabase first.
 
 export default async function handler(req, res) {
-    try {
-        console.log('=== API STARTED (No Library Mode) ===');
-
-        if (req.method !== 'POST') {
-            return res.status(405).json({ error: 'Method Not Allowed' });
-        }
-
-        const { name, email, phone, amount } = req.body;
-
-        if (!name || !email || !phone || !amount) {
-            return res.status(400).json({ error: 'Missing fields' });
-        }
-
-        // ==========================================
-        // === SUPABASE REST API (Manual Fetch) ===
-        // ==========================================
-        
-        const supabaseUrl = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTkwNDEsImV4cCI6MjA4MzM3NTA0MX0.s9JJRy87h0l9od43w8hPI1Xg8jf-ka3qGKSz-nXwBwo'; // Paste your FULL KEY HERE
-        const tableName = 'orders';
-
-        console.log('STEP 1: Inserting data via REST...');
-
-        const response = await fetch(`${supabaseUrl}/rest/v1/${tableName}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': supabaseKey,
-                'Authorization': `Bearer ${supabaseKey}`,
-                'Prefer': 'return=representation' // Ask Supabase to return the inserted row
-            },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                phone: phone,
-                amount: parseFloat(amount),
-                status: 'pending'
-            })
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+        return res.status(405).json({ 
+            success: false, 
+            error: 'Method Not Allowed' 
         });
+    }
 
-        const data = await response.json();
+    try {
+        console.log('=== Backend: Creating ToyyibPay Bill ===');
+        console.log('Request Body:', JSON.stringify(req.body, null, 2));
 
-        if (!response.ok) {
-            console.error('!!! SUPABASE ERROR !!!', data);
-            return res.status(500).json({ 
+        // Get data from the frontend request
+        // The Frontend now sends 'id' because it already saved the order to Supabase
+        const { id, name, email, phone, amount, billDescription } = req.body;
+
+        // Validate required fields
+        if (!id || !name || !email || !phone || !amount) {
+            return res.status(400).json({ 
                 success: false, 
-                error: 'Database error',
-                details: data 
+                error: 'Missing required fields: id, name, email, phone, amount' 
             });
         }
 
-        // Get the ID from the returned data (Supabase REST returns an array)
-        const dbOrderId = data[0].id;
-        console.log('SUCCESS: DB Order ID:', dbOrderId);
+        // === 1. SUPABASE LOGIC REMOVED ===
+        // We removed the database insert here because the Frontend does it.
+        // This prevents duplicate orders and dependency errors.
 
-        // ==========================================
-        // === TOYYIBPAY BILL (Same as before) ===
-        // ==========================================
+        // === 2. TOYYIBPAY CONFIGURATION ===
+        const categoryCode = '2mk6qgyo'; 
+        const userSecretKey = 'b2kcp05o-b5m0-q000-55i7-w3j57riufv7h';
+        const billName = 'ARANIS ECOM';
+        const billPriceSetting = '1';
+        const billPayorInfo = '1';
+        
+        // Convert amount to cents (RM 10.00 = 1000)
+        const billAmount = `${parseFloat(amount) * 100}`; 
+        
+        const billReturnUrl = 'https://aranis-aiadsanalyst.vercel.app/payment-successful.html';
+        const billCallbackUrl = 'https://aranis-aiadsanalyst.vercel.app/api/payment-callback';
+        
+        // Use the ID sent from the Frontend as the reference number
+        // This links the ToyyibPay payment directly to the Supabase record
+        const billExternalReferenceNo = id.toString();
+        
+        const billTo = name;
+        const billEmail = email;
+        const billPhone = phone;
+        const billSplitPayment = '0';
+        const billPaymentChannel = '0';
+        const billChargeToCustomer = '1';
+
+        // === FORM DATA ===
         const params = new URLSearchParams();
-        params.append('userSecretKey', 'b2kcp05o-b5m0-q000-55i7-w3j57riufv7h');
-        params.append('categoryCode', '2mk6qgyo');
-        params.append('billName', 'ARANIS ECOM');
-        params.append('billDescription', `Payment for ${name}`);
-        params.append('billPriceSetting', '1');
-        params.append('billPayorInfo', '1');
-        params.append('billAmount', `${parseFloat(amount) * 100}`);
-        params.append('billReturnUrl', 'https://aranis-aiadsanalyst.vercel.app/payment-succesful.html');
-        params.append('billCallbackUrl', 'https://aranis-aiadsanalyst.vercel.app/api/payment-callback');
-        params.append('billExternalReferenceNo', dbOrderId.toString());
-        params.append('billTo', name);
-        params.append('billEmail', email);
-        params.append('billPhone', phone);
-        params.append('billSplitPayment', '0');
-        params.append('billPaymentChannel', '0');
-        params.append('billChargeToCustomer', '1');
+        params.append('userSecretKey', userSecretKey);
+        params.append('categoryCode', categoryCode);
+        params.append('billName', billName);
+        params.append('billDescription', billDescription || `Pembelian ARANIS - RM${amount}`);
+        params.append('billPriceSetting', billPriceSetting);
+        params.append('billPayorInfo', billPayorInfo);
+        params.append('billAmount', billAmount);
+        params.append('billReturnUrl', billReturnUrl);
+        params.append('billCallbackUrl', billCallbackUrl);
+        params.append('billExternalReferenceNo', billExternalReferenceNo);
+        params.append('billTo', billTo);
+        params.append('billEmail', billEmail);
+        params.append('billPhone', billPhone);
+        params.append('billSplitPayment', billSplitPayment);
+        params.append('billSplitPaymentArgs', '');
+        params.append('billPaymentChannel', billPaymentChannel);
+        params.append('billChargeToCustomer', billChargeToCustomer);
         params.append('billExpiryDays', '1');
-        params.append('billContentEmail', 'Thank you.');
+        params.append('billContentEmail', 'Terima kasih atas pembayaran anda. Prompt AI anda sedia untuk dimuat turun. Sila semel e-mel anda.');
 
-        const payResponse = await fetch('https://toyyibpay.com/index.php/api/createBill', {
+        console.log('Data being sent to ToyyibPay...');
+
+        // Make the API call to ToyyibPay from the server
+        const response = await fetch('https://toyyibpay.com/index.php/api/createBill', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -88,27 +90,74 @@ export default async function handler(req, res) {
             body: params,
         });
 
-        const textResult = await payResponse.text();
+        const textResult = await response.text();
+        console.log('ToyyibPay Raw Response:', textResult);
+
         let result;
-        
         try {
             result = JSON.parse(textResult);
+            console.log('Parsed ToyyibPay Response:', JSON.stringify(result, null, 2));
         } catch (e) {
-            return res.status(500).json({ error: 'Invalid JSON from ToyyibPay', raw: textResult });
+            console.error("Failed to parse ToyyibPay response:", e);
+            
+            // Check for maintenance message
+            if (textResult.includes('FPX') && (textResult.includes('maintenance') || textResult.includes('maintainance'))) {
+                return res.status(503).json({ 
+                    success: false, 
+                    error: 'FPX_MAINTENANCE',
+                    message: 'Online Transfer FPX Sedang maintainance. Sila cuba sebentar tadi.'
+                });
+            }
+            
+            return res.status(500).json({ 
+                success: false, 
+                error: 'Invalid response from payment provider.',
+                details: textResult
+            });
         }
 
-        if (result && result[0] && result[0].BillCode) {
-            return res.status(200).json({
-                success: true,
-                billCode: result[0].BillCode,
-                billUrl: `https://toyyibpay.com/${result[0].BillCode}`
+        // Check if the bill was created successfully
+        if (result && result.length > 0 && result[0].BillCode) {
+            const billCode = result[0].BillCode;
+            const billUrl = `https://toyyibpay.com/${billCode}`;
+
+            console.log('Bill created successfully! Bill Code:', billCode);
+
+            // Send the successful response back to the frontend
+            return res.status(200).json({ 
+                success: true, 
+                billCode: billCode,
+                billUrl: billUrl,
+                billExternalReferenceNo: billExternalReferenceNo,
+                orderId: id 
             });
         } else {
-            return res.status(400).json({ success: false, error: 'ToyyibPay failed', details: result });
+            console.error("ToyyibPay API Error:", result);
+            
+            if (result && typeof result === 'object' && 
+                (JSON.stringify(result).toLowerCase().includes('fpx') && 
+                (JSON.stringify(result).toLowerCase().includes('maintenance') || 
+                 JSON.stringify(result).toLowerCase().includes('maintainance')))) {
+                return res.status(503).json({ 
+                    success: false, 
+                    error: 'FPX_MAINTENANCE',
+                    message: 'Online Transfer FPX Sedang maintainance, Sila gunakan QR untuk Pembayaran. Terima kasih'
+                });
+            }
+            
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Failed to create payment bill.',
+                details: result
+            });
         }
-
-    } catch (err) {
-        console.error('!!! CRASH !!!', err);
-        return res.status(500).json({ error: err.message });
+    } catch (error) {
+        // Outer catch block to prevent HTML errors
+        console.error('Server Error (Outer Catch):', error);
+        return res.status(500).json({ 
+            success: false, 
+            error: 'An internal server error occurred.',
+            details: error.message
+        });
     }
 }

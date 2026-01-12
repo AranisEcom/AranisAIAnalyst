@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Meta Ads AI | ARANIS ECOM HUB</title>
+    
+    <!-- 1. Load Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- STYLES --- */
+        /* --- STYLES (UNCHANGED) --- */
         :root {
             --bg-dark: #0f1115;
             --bg-card: #181b21;
@@ -295,6 +299,11 @@
 
     <!-- Javascript Logic -->
     <script>
+        // 1. CONFIGURATION
+        const SUPABASE_URL = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTkwNDEsImV4cCI6MjA4MzM3NTA0MX0.s9JJRy87h0l9od43w8hPI1Xg8jf-ka3qGKSz-nXwBwo';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         document.getElementById('checkout-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -362,13 +371,41 @@
             btnIcon.style.display = 'none';
 
             try {
-                // CALL YOUR BACKEND API
+                // ==========================================
+                // PHASE 1: SAVE TO SUPABASE
+                // ==========================================
+                console.log('Saving to Supabase...');
+                const { data: orderData, error: dbError } = await supabase
+                    .from('orders')
+                    .insert([
+                        {
+                            name: data.name,
+                            email: data.email,
+                            phone: data.phone,
+                            amount: 35.90,
+                            status: 'pending'
+                        }
+                    ])
+                    .select(); // Important: Returns the inserted row with ID
+
+                if (dbError) {
+                    throw new Error('Database Error: ' + dbError.message);
+                }
+
+                const orderId = orderData[0].id;
+                console.log('Order ID:', orderId);
+
+                // ==========================================
+                // PHASE 2: CALL BACKEND API
+                // ==========================================
+                console.log('Creating Bill...');
                 const response = await fetch('/api/create-bill', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        id: orderId,          // Pass the ID to backend
                         name: data.name,
                         email: data.email,
                         phone: data.phone,

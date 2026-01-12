@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success - Akses Ahli | ARANIS ECOM HUB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0f1115;
+            --bg-card: #181b21;
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.6);
+            --secondary: #3b82f6;
+            --accent: #34d399;
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --gradient-main: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --matrix-green: #0F0;
+        }
+
+        /* --- RESET & SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+            /* Prevent scrolling while loader is active */
+            overflow-y: hidden; 
+        }
+        body.loaded {
+            overflow-y: auto; /* Re-enable scrolling */
+        }
+
+        /* --- BACKGROUND FX --- */
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-dark) 60%);
+            z-index: -1; pointer-events: none;
+        }
+
+        /* --- LAYOUT UTILS --- */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 2; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .grid-assets { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        
+        /* --- HEADER --- */
+        header { padding: 20px 0; border-bottom: 1px solid var(--border); background: rgba(15, 17, 21, 0.8); backdrop-filter: blur(10px); }
+        .logo { font-weight: 800; font-size: 1.2rem; color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo span { color: var(--primary); }
+
+        /* --- HERO SECTION --- */
+        .hero { text-align: center; padding: 80px 0 60px; position: relative; }
+        .success-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(52, 211, 153, 0.1); color: var(--accent);
+            padding: 8px 16px; border-radius: 50px; font-size: 0.85rem; font-weight: 700;
+            border: 1px solid rgba(52, 211, 153, 0.2); margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 15px;
+            background: linear-gradient(to right, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+        .hero p { color: var(--text-muted); max-width: 600px; margin: 0 auto; animation: fadeInUp 0.8s ease-out 0.4s backwards; }
+
+        /* --- ASSET CARDS --- */
+        .asset-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 24px; padding: 30px; transition: all 0.4s ease;
+            position: relative; overflow: hidden; display: flex; flex-direction: column;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+        }
+        .asset-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        /* Special Style for The Main Prompt Card */
+        .asset-card.main-feature {
+            grid-column: 1 / -1; /* Full width */
+            background: linear-gradient(145deg, rgba(139,92,246,0.05) 0%, rgba(24,27,33,1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .card-icon {
+            width: 50px; height: 50px; border-radius: 14px;
+            background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: var(--primary); margin-bottom: 20px;
+        }
+        .asset-card h3 { font-size: 1.25rem; margin-bottom: 10px; color: #fff; }
+        .asset-card p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; flex-grow: 1; }
+
+        /* --- ENCRYPTED PROMPT BOX --- */
+        .terminal-box {
+            background: #000; border-radius: 12px; padding: 20px; font-family: 'Fira Code', monospace;
+            font-size: 0.9rem; color: #33ff00; min-height: 150px; position: relative;
+            border: 1px solid #333; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            text-align: left;
+        }
+        
+        .encrypted-text { color: #555; word-break: break-all; text-align: center; user-select: none; }
+        .decrypted-text { color: #e2e8f0; white-space: pre-wrap; line-height: 1.6; display: none; }
+        
+        .decrypt-btn {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: var(--gradient-main); border: none; color: white; padding: 12px 24px;
+            border-radius: 50px; font-weight: 700; cursor: pointer; z-index: 10;
+            box-shadow: 0 0 20px var(--primary-glow); transition: 0.3s;
+        }
+        .decrypt-btn:hover { transform: translate(-50%, -50%) scale(1.05); }
+        
+        .copy-btn {
+            margin-top: 15px; width: 100%; padding: 12px; background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border); color: #fff; border-radius: 8px; cursor: pointer;
+            display: none; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.2s; font-weight: 600;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.1); }
+
+        /* --- EMBEDDED VIDEO CONTAINER --- */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            background: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-action {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 14px; border-radius: 12px; font-weight: 700;
+            text-decoration: none; transition: 0.3s;
+        }
+        .btn-primary { background: var(--gradient-main); color: white; box-shadow: 0 4px 15px rgba(139,92,246,0.3); }
+        .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        
+        /* --- FOOTER & SUPPORT --- */
+        footer { margin-top: 100px; padding: 60px 0 30px; border-top: 1px solid var(--border); text-align: center; }
+        
+        .support-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            padding: 25px; border-radius: 20px; max-width: 500px; margin: 0 auto 30px;
+            display: inline-block; transition: 0.3s;
+        }
+        .support-card:hover {
+            border-color: var(--primary);
+            background: rgba(139, 92, 246, 0.05);
+        }
+        .support-card p { color: var(--text-muted); margin-bottom: 10px; font-size: 0.9rem; }
+        .email-link {
+            font-size: 1.2rem; font-weight: 700; color: white; text-decoration: none; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            transition: 0.3s;
+        }
+        .email-link:hover { color: var(--primary); }
+        
+        .footer-links { margin-bottom: 20px; display: flex; justify-content: center; gap: 25px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .footer-links a:hover { color: white; }
+        .copyright { opacity: 0.4; font-size: 0.8rem; }
+
+        /* --- TELEGRAM POPUP MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
+            z-index: 999; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: 0.4s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .modal-content {
+            background: #1f2937; width: 90%; max-width: 450px;
+            padding: 40px 30px; border-radius: 24px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        
+        .tg-icon {
+            font-size: 3.5rem; color: #0088cc; margin-bottom: 20px;
+            background: rgba(0, 136, 204, 0.1); width: 80px; height: 80px; line-height: 80px;
+            border-radius: 50%; display: inline-block;
+        }
+        .close-modal {
+            position: absolute; top: 15px; right: 15px; background: none; border: none;
+            color: #666; font-size: 1.2rem; cursor: pointer; transition: 0.2s;
+        }
+        .close-modal:hover { color: #fff; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- RESPONSIVE --- */
+        @media(max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .grid-assets { grid-template-columns: 1fr; }
+            .email-link { font-size: 1rem; }
+        }
+        
+        /* Canvas for confetti */
+        #confetti-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 5; }
+
+        /* =========================================
+           NEW: MATRIX LOADER STYLES
+           ========================================= */
+        #matrix-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 10000; /* Highest z-index */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+        
+        /* When the class 'hidden' is added, fade it out */
+        #matrix-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .loader-status {
+            position: relative;
+            z-index: 10001;
+            color: rgb(162, 0, 255);
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgb(140, 0, 255);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border: 1px solid rgb(204, 0, 255);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .loading-dots:after {
+            content: '.';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60% { content: '...'; }
+            80%, 100% { content: ''; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NEW: MATRIX LOADER SCREEN -->
+    <div id="matrix-loader">
+        <canvas id="matrix-canvas"></canvas>
+        <div class="loader-status">
+            <div style="margin-bottom:5px; color:#fff; font-size:0.8rem; opacity:0.7;">Loading Meta Ads Analyst</div>
+            <span>Master Prompt Load <span class="loading-dots"></span></span>
+        </div>
+    </div>
+
+    <!-- Background Ambience -->
+    <div class="bg-glow"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Telegram Modal -->
+    <div class="modal-overlay" id="tgModal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            <div class="tg-icon"><i class="fab fa-telegram-plane"></i></div>
+            <h2 style="margin-bottom: 10px; color: white;">Jangan Miss Update!</h2>
+            <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem;">
+                Join channel Telegram kami untuk dapat tips eksklusif, update prompt terbaru dan bantuan langsung.
+            </p>
+            <a href="https://t.me/+WRn30GIxwww2ZmE9" target="_blank" class="btn-action btn-primary">
+                Join Channel Sekarang <i class="fas fa-arrow-right"></i>
+            </a>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: #666; cursor: pointer;" onclick="closeModal()">Tidak sekarang, teruskan ke aset.</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <a href="#" class="logo"><i class="fas fa-rocket"></i> ARANIS<span>ECOM</span></a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="success-badge">
+                <i class="fas fa-check-circle"></i> Pembayaran Berjaya
+            </div>
+            <h1>Tahniah! Akses Anda Aktif.</h1>
+            <p>Terima kasih kerana memilih kami. Semua aset produk anda sudah sedia di bawah. Sila simpan halaman ini untuk rujukan masa hadapan.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <div class="grid-assets">
+            
+            <!-- 1. THE ENCRYPTED PROMPT (Main Feature) -->
+            <div class="asset-card main-feature">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                    <div>
+                        <span style="background: var(--primary); color: #fff; font-size: 0.7rem; padding: 4px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase;">Product #1</span>
+                        <h3 style="margin-top: 10px;">Master Meta Analyst Prompt</h3>
+                    </div>
+                    <div class="card-icon"><i class="fas fa-user-secret"></i></div>
+                </div>
+                
+                <p>Ini adalah "otak" kepada sistem kami. Prompt ini telah dituning untuk menganalisis data Meta Ads anda dengan ketepatan tinggi.</p>
+
+                <div class="terminal-box" id="promptBox">
+                    <div class="encrypted-text" id="encryptedText">
+                        0x4F 0xA1... // ENCRYPTED_CONTENT...<br>
+                        [SECURE VAULT]<br>
+                        CLICK TO DECRYPT ASSET
+                    </div>
+                    <div class="decrypted-text" id="realPrompt"></div>
+                    <button class="decrypt-btn" id="decryptBtn" onclick="decryptPrompt()">
+                        <i class="fas fa-unlock-alt"></i> &nbsp;Reveal Prompt
+                    </button>
+                </div>
+
+                <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">
+                    <i class="fas fa-copy"></i> Salin Prompt ke ChatGPT
+                </button>
+            </div>
+
+            <!-- 2. EMBEDDED VIDEO 1 (Setup Prompt) -->
+            <div class="asset-card">
+                <div class="card-icon"><i class="fas fa-play-circle"></i></div>
+                <h3>Video Tutorial: Setup Prompt</h3>
+                <p>Panduan langkah demi langkah bagaimana untuk menggunakan prompt yang telah anda salin tadi di dalam ChatGPT.</p>
+                
+                <!-- Embedded YouTube Video (No Popup) -->
+                <div class="video-container">
+                    <iframe 
+                        width="560" 
+                        height="315" 
+                        src="https://www.youtube.com/embed/03TG7FuNiMw?si=ZPz4C7Uf8q6oNHvp" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- 3. EXCEL CHEAT SHEET -->
+            <div class="asset-card">
+                <div class="card-icon"><i class="fas fa-file-excel"></i></div>
+                <h3>Cheat Sheet: Daily Record</h3>
+                <p>Template Excel khas untuk anda rekod data harian dari Ads Manager supaya mudah di-copy paste ke AI.</p>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px dashed #444;">
+                    <div style="display: flex; gap: 5px; margin-bottom: 5px; height: 8px;">
+                        <div style="flex: 1; background: #333; border-radius: 4px;"></div>
+                        <div style="flex: 1; background: #333; border-radius: 4px;"></div>
+                        <div style="flex: 1; background: #333; border-radius: 4px;"></div>
+                    </div>
+                    <div style="display: flex; gap: 5px; height: 8px;">
+                        <div style="flex: 1; background: #333; border-radius: 4px;"></div>
+                        <div style="flex: 1; background: #333; border-radius: 4px;"></div>
+                        <div style="flex: 1; background: #333; border-radius: 4px;"></div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #666; text-align: center; margin-top: 10px;">meta_ads_cheatsheet.xlsx</div>
+                </div>
+
+                <a href="https://pub-d80a9c3870434bf5ae666086c9ee5213.r2.dev/Meta_Ads_Cheatsheet_Daily_Input.xlsx" download class="btn-action btn-primary">
+                    <i class="fas fa-download"></i> Download Excel
+                </a>
+            </div>
+
+            <!-- 4. EMBEDDED VIDEO 2 (Setup Metrics) -->
+            <div class="asset-card">
+                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Video: Setup Metrics</h3>
+                <p>Tutorial cara untuk set columns (metrik) yang betul di dalam Meta Ads Manager supaya data yang diambil adalah tepat.</p>
+
+                <!-- Embedded YouTube Video Placeholder -->
+                <!-- Replace 'fUEbPjNKNws' with your specific video ID for this section below -->
+                <div class="video-container">
+                    <iframe 
+                        width="560" 
+                        height="315" 
+                        src="https://www.youtube.com/embed/axNPwBvqrd0?si=StwoXlcLusgOs-MP" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer with Support -->
+    <footer>
+        <div class="container">
+            
+            <!-- SUPPORT EMAIL CARD -->
+            <div class="support-card">
+                <p>Ada Masalah Teknikal?</p>
+                <a href="mailto:aranis.ecom@gmail.com" class="email-link">
+                    <i class="fas fa-envelope"></i> aranis.ecom@gmail.com
+                </a>
+            </div>
+
+            <!-- NAVIGATION LINKS -->
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Refund Policy</a>
+            </div>
+
+            <!-- COPYRIGHT -->
+            <p class="copyright">&copy; 2024 Aranis Ecom Hub. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. MATRIX DIGITAL RAIN EFFECT ---
+        const matrixCanvas = document.getElementById('matrix-canvas');
+        const mCtx = matrixCanvas.getContext('2d');
+
+        let matrixInterval;
+        let isMatrixRunning = true;
+
+        function initMatrix() {
+            // Set canvas size
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+
+            const fontSize = 16;
+            const columns = matrixCanvas.width / fontSize;
+            
+            // Array of drops - one per column
+            const drops = [];
+            for(let x = 0; x < columns; x++) {
+                drops[x] = 1;
+            }
+
+            // The characters to use (Katakana + Latin + Numbers)
+            const chars = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            
+            function draw() {
+                if(!isMatrixRunning) return; // Stop if flag is false
+
+                // Black with slight opacity to create trail effect
+                mCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
+                mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+                mCtx.fillStyle = "#bc88f7"; // Green text
+                mCtx.font = fontSize + "px 'Fira Code', monospace";
+
+                for(let i = 0; i < drops.length; i++) {
+                    // Pick random char
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    
+                    // Draw char
+                    mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    // Reset drop to top randomly or if it crossed screen
+                    if(drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    
+                    // Move drop down
+                    drops[i]++;
+                }
+            }
+
+            // Run animation loop
+            matrixInterval = setInterval(draw, 33);
+        }
+
+        // Initialize Matrix immediately
+        initMatrix();
+
+        // Handle resize for matrix
+        window.addEventListener('resize', () => {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+        });
+
+
+        // --- 2. PAGE LOADING SEQUENCE ---
+        window.addEventListener('load', () => {
+            // Set a timeout for the "Loading" duration (e.g., 3.5 seconds)
+            setTimeout(() => {
+                const loader = document.getElementById('matrix-loader');
+                
+                // 1. Add hidden class to fade out
+                loader.classList.add('hidden');
+                
+                // 2. Enable scrolling on body
+                document.body.classList.add('loaded');
+                
+                // 3. Stop Matrix animation logic to save performance
+                isMatrixRunning = false;
+                clearInterval(matrixInterval);
+
+                // 4. Wait for fade out to finish (0.8s), then trigger Main Page Logic
+                setTimeout(() => {
+                    // Trigger Confetti
+                    fireConfetti();
+                    
+                    // Show Telegram Modal (Original Logic)
+                    document.getElementById('tgModal').classList.add('active');
+                    
+                    // Remove loader from DOM entirely after transition
+                    loader.style.display = 'none';
+
+                }, 800); // Matches CSS transition time
+
+            }, 3500); // 3.5 seconds of Matrix rain
+        });
+
+        function closeModal() {
+            document.getElementById('tgModal').classList.remove('active');
+        }
+
+
+        // --- 3. ENCRYPTED PROMPT DECRYPTION EFFECT ---
+        const realPromptContent = `{
+  "role": "system",
+  "content": "You are now a Senior Meta Ads Performance Analyst with 10+ years of experience managing multi-million dollar ad budgets. Act as my personal strategist for analyzing and optimizing Facebook and Instagram campaigns using advanced performance frameworks. Your role: 1) Diagnose performance shifts with clear reasoning rooted in data and human psychology. 2) Always interpret why metrics move, such as creative fatigue, audience burnout, misaligned targeting, poor funnel structure, placement inefficiency, offer mismatch, or algorithmic shifts. 3) Evaluate full funnel KPIs (CPM, CTR, CPC, CPA, ROAS, Frequency, CVR) and connect each metric to real business impact. 4) Provide direct and actionable recommendations, including what to pause, what to fix, what to test, and what to scale. 5) Avoid vague advice. Every insight must include cause, effect, and action. 6) If any data is missing or unclear, ask precisely for what is needed before giving analysis. 7) Communicate with clarity, confidence, and strategic depth suitable for C level decision making. End every response with a short and prioritized strategic plan that focuses on improving performance, profit, and long term scaling stability."
+}`;
+
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%&^*";
+        let isDecrypted = false;
+
+        function decryptPrompt() {
+            if(isDecrypted) return;
+            
+            const btn = document.getElementById('decryptBtn');
+            const encryptedEl = document.getElementById('encryptedText');
+            const decryptedEl = document.getElementById('realPrompt');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            // Hide button initially
+            btn.style.transform = "translate(-50%, -50%) scale(0)";
+            
+            let iterations = 0;
+            const interval = setInterval(() => {
+                // Generate random string for effect
+                encryptedEl.innerText = realPromptContent.split("")
+                    .map((letter, index) => {
+                        if(index < iterations) return realPromptContent[index];
+                        return chars[Math.floor(Math.random() * chars.length)]
+                    })
+                    .join("");
+                
+                if(iterations >= realPromptContent.length) { 
+                    clearInterval(interval);
+                    // Finalize
+                    encryptedEl.style.display = 'none';
+                    decryptedEl.innerText = realPromptContent;
+                    decryptedEl.style.display = 'block';
+                    btn.style.display = 'none'; // Remove button completely
+                    copyBtn.style.display = 'flex'; // Show copy button
+                    copyBtn.classList.add('fadeInUp');
+                    isDecrypted = true;
+                }
+                
+                iterations += 3; // Speed of decryption
+            }, 10);
+        }
+
+        // --- 4. COPY TO CLIPBOARD ---
+        function copyToClipboard() {
+            navigator.clipboard.writeText(realPromptContent).then(() => {
+                const btn = document.getElementById('copyBtn');
+                const originalHTML = btn.innerHTML;
+                
+                btn.innerHTML = '<i class="fas fa-check"></i> Berjaya Disalin!';
+                btn.style.background = 'rgba(52, 211, 153, 0.2)';
+                btn.style.color = '#34d399';
+                btn.style.borderColor = '#34d399';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                    btn.style.borderColor = '';
+                }, 2000);
+            });
+        }
+
+        // --- 5. SIMPLE CANVAS CONFETTI (No external lib) ---
+        function fireConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const particleCount = 150;
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2 + 100, // Start from center/bottom
+                    w: Math.random() * 10 + 5,
+                    h: Math.random() * 10 + 5,
+                    vx: (Math.random() - 0.5) * 20,
+                    vy: (Math.random() - 1) * 20 - 5,
+                    color: `hsl(${Math.random() * 360}, 70%, 50%)`,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: (Math.random() - 0.5) * 10
+                });
+            }
+
+            function update() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                let activeParticles = 0;
+                particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.5; // Gravity
+                    p.rotation += p.rotationSpeed;
+                    
+                    if (p.y < canvas.height) activeParticles++;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                    ctx.restore();
+                });
+
+                if (activeParticles > 0) requestAnimationFrame(update);
+                else ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            update();
+        }
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('confetti-canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

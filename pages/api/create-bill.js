@@ -1,196 +1,114 @@
-import { createClient } from '@supabase/supabase-js';
-
-// ==========================================
-// === SUPABASE CONFIGURATION ===
-// ==========================================
-const supabaseUrl = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
-// Ensure you are using the SERVICE_ROLE key (anon key works too, but service_role bypasses RLS for safety)
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzc5OTA0MSwiZXhwIjoyMDgzMzc1MDQxfQ.PDa6vUYNtdUCdXD0a5ycKC6WfuqiYGfK4LcDSghvszw';
-const supabase = createClient(supabaseUrl, supabaseKey);
+// === NO IMPORTS NEEDED ===
+// No library needed here.
 
 export default async function handler(req, res) {
-    // Top-level try/catch to prevent HTML crash pages
     try {
-        console.log('=== API REQUEST STARTED ===');
+        console.log('=== API STARTED (No Library Mode) ===');
 
-        // Only allow POST
         if (req.method !== 'POST') {
-            return res.status(405).json({ success: false, error: 'Method Not Allowed' });
+            return res.status(405).json({ error: 'Method Not Allowed' });
         }
 
-        // Debug Log: Check if body exists
-        console.log('Incoming Body:', req.body);
+        const { name, email, phone, amount } = req.body;
 
-        // VALIDATION: Check if body exists
-        if (!req.body || Object.keys(req.body).length === 0) {
-            console.error('ERROR: Request body is empty. Check Frontend headers.');
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Request body is empty. Did you send JSON headers?' 
-            });
-        }
-
-        const { name, email, phone, amount, billDescription } = req.body;
-
-        // VALIDATION: Check required fields
         if (!name || !email || !phone || !amount) {
-            console.error('ERROR: Missing fields', { name, email, phone, amount });
-            return res.status(400).json({ 
-                success: false, 
-                error: 'Missing required fields: name, email, phone, amount' 
-            });
+            return res.status(400).json({ error: 'Missing fields' });
         }
 
         // ==========================================
-        // === 1. SAVE TO SUPABASE (With Detailed Logs) ===
+        // === SUPABASE REST API (Manual Fetch) ===
         // ==========================================
-        console.log('STEP 1: Attempting to save order to Supabase...');
         
-        let dbOrderId = null;
+        const supabaseUrl = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzc5OTA0MSwiZXhwIjoyMDgzMzc1MDQxfQ.PDa6vUYNtdUCdXD0a5ycKC6WfuqiYGfK4LcDSghvszw'; // Paste your FULL KEY HERE
+        const tableName = 'orders';
 
-        try {
-            const { data: orderData, error: dbError } = await supabase
-                .from('orders')
-                .insert([
-                    { 
-                        name: name, 
-                        email: email, 
-                        phone: phone, 
-                        amount: parseFloat(amount), // Ensure it's a number
-                        status: 'pending' 
-                    }
-                ])
-                .select();
+        console.log('STEP 1: Inserting data via REST...');
 
-            if (dbError) {
-                // THIS IS WHERE YOU WILL SEE "FAIL TO SAVE DATA" IN CONSOLE
-                console.error('!!! FAIL TO SAVE DATA !!!');
-                console.error('Supabase Error Details:', JSON.stringify(dbError, null, 2));
-                
-                return res.status(500).json({ 
-                    success: false, 
-                    error: 'Fail to save data to database.',
-                    details: dbError.message 
-                });
-            }
+        const response = await fetch(`${supabaseUrl}/rest/v1/${tableName}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Prefer': 'return=representation' // Ask Supabase to return the inserted row
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone,
+                amount: parseFloat(amount),
+                status: 'pending'
+            })
+        });
 
-            // Check if data was actually returned
-            if (!orderData || orderData.length === 0) {
-                console.error('!!! FAIL TO SAVE DATA: No data returned from insert !!!');
-                return res.status(500).json({
-                    success: false,
-                    error: 'Fail to save data: Database did not return an ID.'
-                });
-            }
+        const data = await response.json();
 
-            dbOrderId = orderData[0].id;
-            console.log(`SUCCESS: Order saved to Supabase. ID: ${dbOrderId}`);
-
-        } catch (error) {
-            console.error('!!! CRITICAL SYSTEM ERROR !!!');
-            console.error(error.message);
+        if (!response.ok) {
+            console.error('!!! SUPABASE ERROR !!!', data);
             return res.status(500).json({ 
                 success: false, 
-                error: 'Server crashed while saving data.',
-                details: error.message 
+                error: 'Database error',
+                details: data 
             });
         }
 
-        // ==========================================
-        // === 2. CREATE TOYYIBPAY BILL ===
-        // ==========================================
-        console.log('STEP 2: Creating ToyyibPay Bill...');
+        // Get the ID from the returned data (Supabase REST returns an array)
+        const dbOrderId = data[0].id;
+        console.log('SUCCESS: DB Order ID:', dbOrderId);
 
-        const categoryCode = '2mk6qgyo'; 
-        const userSecretKey = 'b2kcp05o-b5m0-q000-55i7-w3j57riufv7h';
-        const billName = 'ARANIS ECOM';
-        const billPriceSetting = '1';
-        const billPayorInfo = '1';
-        const billAmount = `${parseFloat(amount) * 100}`; // RM10.00 = 1000
-        
-        const billReturnUrl = 'https://aranis-aiadsanalyst.vercel.app/payment-successful.html';
-        const billCallbackUrl = 'https://aranis-aiadsanalyst.vercel.app/api/payment-callback';
-        
-        const billExternalReferenceNo = dbOrderId.toString();
-        const billTo = name;
-        const billEmail = email;
-        const billPhone = phone;
-        const billSplitPayment = '0';
-        const billPaymentChannel = '0';
-        const billChargeToCustomer = '1';
-
-        // Use URLSearchParams (Standard Node.js format)
+        // ==========================================
+        // === TOYYIBPAY BILL (Same as before) ===
+        // ==========================================
         const params = new URLSearchParams();
-        params.append('userSecretKey', userSecretKey);
-        params.append('categoryCode', categoryCode);
-        params.append('billName', billName);
-        params.append('billDescription', billDescription || `Pembelian ARANIS - RM${amount}`);
-        params.append('billPriceSetting', billPriceSetting);
-        params.append('billPayorInfo', billPayorInfo);
-        params.append('billAmount', billAmount);
-        params.append('billReturnUrl', billReturnUrl);
-        params.append('billCallbackUrl', billCallbackUrl);
-        params.append('billExternalReferenceNo', billExternalReferenceNo);
-        params.append('billTo', billTo);
-        params.append('billEmail', billEmail);
-        params.append('billPhone', billPhone);
-        params.append('billSplitPayment', billSplitPayment);
-        params.append('billSplitPaymentArgs', '');
-        params.append('billPaymentChannel', billPaymentChannel);
-        params.append('billChargeToCustomer', billChargeToCustomer);
+        params.append('userSecretKey', 'b2kcp05o-b5m0-q000-55i7-w3j57riufv7h');
+        params.append('categoryCode', '2mk6qgyo');
+        params.append('billName', 'ARANIS ECOM');
+        params.append('billDescription', `Payment for ${name}`);
+        params.append('billPriceSetting', '1');
+        params.append('billPayorInfo', '1');
+        params.append('billAmount', `${parseFloat(amount) * 100}`);
+        params.append('billReturnUrl', 'https://aranis-aiadsanalyst.vercel.app/payment-succesful.html');
+        params.append('billCallbackUrl', 'https://aranis-aiadsanalyst.vercel.app/api/payment-callback');
+        params.append('billExternalReferenceNo', dbOrderId.toString());
+        params.append('billTo', name);
+        params.append('billEmail', email);
+        params.append('billPhone', phone);
+        params.append('billSplitPayment', '0');
+        params.append('billPaymentChannel', '0');
+        params.append('billChargeToCustomer', '1');
         params.append('billExpiryDays', '1');
-        params.append('billContentEmail', 'Terima kasih atas pembayaran anda.');
+        params.append('billContentEmail', 'Thank you.');
 
+        const payResponse = await fetch('https://toyyibpay.com/index.php/api/createBill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params,
+        });
+
+        const textResult = await payResponse.text();
+        let result;
+        
         try {
-            const response = await fetch('https://toyyibpay.com/index.php/api/createBill', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: params,
-            });
-
-            const textResult = await response.text();
-            console.log('ToyyibPay Response:', textResult);
-
-            let result;
-            try {
-                result = JSON.parse(textResult);
-            } catch (e) {
-                return res.status(500).json({ 
-                    success: false, 
-                    error: 'Invalid JSON from ToyyibPay',
-                    details: textResult
-                });
-            }
-
-            if (result && result.length > 0 && result[0].BillCode) {
-                return res.status(200).json({ 
-                    success: true, 
-                    billCode: result[0].BillCode,
-                    billUrl: `https://toyyibpay.com/${result[0].BillCode}`,
-                    orderId: dbOrderId 
-                });
-            } else {
-                console.error('ToyyibPay API Error:', result);
-                return res.status(400).json({ 
-                    success: false, 
-                    error: 'Failed to create bill with provider.',
-                    details: result
-                });
-            }
-        } catch (error) {
-            console.error('Fetch Error:', error);
-            return res.status(500).json({ success: false, error: 'Network error connecting to ToyyibPay' });
+            result = JSON.parse(textResult);
+        } catch (e) {
+            return res.status(500).json({ error: 'Invalid JSON from ToyyibPay', raw: textResult });
         }
 
-    } catch (error) {
-        // This final catch block ensures you ALWAYS get JSON, never HTML
-        console.error('=== UNHANDLED SERVER ERROR ===', error);
-        return res.status(500).json({ 
-            success: false, 
-            error: 'An internal server error occurred.',
-            details: error.message 
-        });
+        if (result && result[0] && result[0].BillCode) {
+            return res.status(200).json({
+                success: true,
+                billCode: result[0].BillCode,
+                billUrl: `https://toyyibpay.com/${result[0].BillCode}`
+            });
+        } else {
+            return res.status(400).json({ success: false, error: 'ToyyibPay failed', details: result });
+        }
+
+    } catch (err) {
+        console.error('!!! CRASH !!!', err);
+        return res.status(500).json({ error: err.message });
     }
 }

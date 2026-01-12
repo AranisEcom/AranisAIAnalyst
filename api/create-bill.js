@@ -1,8 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
 // ==========================================
-// === SUPABASE CONFIGURATION (UPDATED) ===
+// === SUPABASE CONFIGURATION ===
 // ==========================================
+// Ideally, store these in .env.local
+// process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY
 const supabaseUrl = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzc5OTA0MSwiZXhwIjoyMDgzMzc1MDQxfQ.PDa6vUYNtdUCdXD0a5ycKC6WfuqiYGfK4LcDSghvszw';
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -18,6 +20,7 @@ export default async function handler(req, res) {
 
     try {
         console.log('=== Payment Request Started ===');
+        // Ensure we log the body safely
         console.log('Request Body:', JSON.stringify(req.body, null, 2));
 
         // Get data from the frontend request
@@ -64,19 +67,18 @@ export default async function handler(req, res) {
         }
 
         // === 2. TOYYIBPAY CONFIGURATION ===
-        // --- CHANGE YOUR CATEGORY CODE HERE IF NEEDED ---
-        const categoryCode = '8f5ynfpt'; 
-        // -------------------------------------------
-
+        const categoryCode = '2mk6qgyo'; 
         const userSecretKey = 'b2kcp05o-b5m0-q000-55i7-w3j57riufv7h';
         const billName = 'ARANIS ECOM';
         const billPriceSetting = '1';
         const billPayorInfo = '1';
-        const billAmount = `${amount * 100}`; // Convert to cents
-        const billReturnUrl = 'https://aranis-aiadsanalyst.vercel.app/payment-successful.html'; // Update this to your actual success page URL
-        const billCallbackUrl = 'https://aranis-aiadsanalyst.vercel.app/api/payment-callback';    // Update this to your actual callback URL
         
-        // Use the Supabase Order ID as the reference number
+        // Ensure amount is parsed as float before calculation
+        const billAmount = `${parseFloat(amount) * 100}`; 
+        
+        const billReturnUrl = 'https://aranis-aiadsanalyst.vercel.app/payment-successful.html';
+        const billCallbackUrl = 'https://aranis-aiadsanalyst.vercel.app/api/payment-callback';
+        
         const billExternalReferenceNo = dbOrderId.toString();
         
         const billTo = name;
@@ -86,38 +88,39 @@ export default async function handler(req, res) {
         const billPaymentChannel = '0';
         const billChargeToCustomer = '1';
 
-        // Create the form data for ToyyibPay
-        const body = new FormData();
-        body.append('userSecretKey', userSecretKey);
-        body.append('categoryCode', categoryCode);
-        body.append('billName', billName);
-        body.append('billDescription', billDescription || `Pembelian ARANIS - RM${amount}`);
-        body.append('billPriceSetting', billPriceSetting);
-        body.append('billPayorInfo', billPayorInfo);
-        body.append('billAmount', billAmount);
-        body.append('billReturnUrl', billReturnUrl);
-        body.append('billCallbackUrl', billCallbackUrl);
-        body.append('billExternalReferenceNo', billExternalReferenceNo);
-        body.append('billTo', billTo);
-        body.append('billEmail', billEmail);
-        body.append('billPhone', billPhone);
-        body.append('billSplitPayment', billSplitPayment);
-        body.append('billSplitPaymentArgs', '');
-        body.append('billPaymentChannel', billPaymentChannel);
-        body.append('billChargeToCustomer', billChargeToCustomer);
-        
-        // Set bill expiry to 1 day
-        body.append('billExpiryDays', '1');
-        
-        // Custom Email Content
-        body.append('billContentEmail', 'Terima kasih atas pembayaran anda. Prompt AI anda sedia untuk dimuat turun. Sila semel e-mel anda.');
+        // === FIX: Use URLSearchParams instead of FormData ===
+        // URLSearchParams is standard in Node.js and sends data as 'application/x-www-form-urlencoded',
+        // which is exactly what the ToyyibPay PHP example uses.
+        const params = new URLSearchParams();
+        params.append('userSecretKey', userSecretKey);
+        params.append('categoryCode', categoryCode);
+        params.append('billName', billName);
+        params.append('billDescription', billDescription || `Pembelian ARANIS - RM${amount}`);
+        params.append('billPriceSetting', billPriceSetting);
+        params.append('billPayorInfo', billPayorInfo);
+        params.append('billAmount', billAmount);
+        params.append('billReturnUrl', billReturnUrl);
+        params.append('billCallbackUrl', billCallbackUrl);
+        params.append('billExternalReferenceNo', billExternalReferenceNo);
+        params.append('billTo', billTo);
+        params.append('billEmail', billEmail);
+        params.append('billPhone', billPhone);
+        params.append('billSplitPayment', billSplitPayment);
+        params.append('billSplitPaymentArgs', '');
+        params.append('billPaymentChannel', billPaymentChannel);
+        params.append('billChargeToCustomer', billChargeToCustomer);
+        params.append('billExpiryDays', '1');
+        params.append('billContentEmail', 'Terima kasih atas pembayaran anda. Prompt AI anda sedia untuk dimuat turun. Sila semel e-mel anda.');
 
         console.log('Data being sent to ToyyibPay...');
 
         // Make the API call to ToyyibPay from the server
         const response = await fetch('https://toyyibpay.com/index.php/api/createBill', {
             method: 'POST',
-            body: body,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: params,
         });
 
         const textResult = await response.text();
@@ -130,7 +133,7 @@ export default async function handler(req, res) {
         } catch (e) {
             console.error("Failed to parse ToyyibPay response:", e);
             
-            // Check if the response contains FPX maintenance message
+            // Check for maintenance message
             if (textResult.includes('FPX') && (textResult.includes('maintenance') || textResult.includes('maintainance'))) {
                 return res.status(503).json({ 
                     success: false, 
@@ -153,8 +156,8 @@ export default async function handler(req, res) {
 
             console.log('Bill created successfully! Bill Code:', billCode);
 
-            // Send InitiateCheckout event to Facebook Conversions API (Optional)
-            // UPDATE PIXEL ID AND TOKEN BELOW IF NEEDED
+            // Send InitiateCheckout event to Facebook Conversions API (Fire and Forget)
+            // We use .then() without await to avoid blocking the response to the user
             try {
                 const pixelId = '2276519576162204';
                 const accessToken = 'EAAcJZCFldLZAYBP2Rt17ob7AJUEAPnCZCdiIOHZBereJjCRiofT1SottrBAL8EjPME1L6LANNoRN5I0yootHZCYioBgN2SUZBHPbUU93iRd54xOSeM7RbiHHIqemm6zM5p6GLIZAHNOezCVLROwIER8spOyZB3iC4wYTB1qZBADgHpWlZCpcZC0VA3Hi26sRJ85fwZDZD';
@@ -179,7 +182,7 @@ export default async function handler(req, res) {
                             },
                             custom_data: {
                                 currency: 'MYR',
-                                value: (amount * 100).toString(),
+                                value: (parseFloat(amount) * 100).toString(),
                                 content_name: 'Meta Analyst AI Prompt',
                                 content_category: 'Software',
                                 content_ids: ['meta_analyst_ai'],
@@ -206,7 +209,6 @@ export default async function handler(req, res) {
         } else {
             console.error("ToyyibPay API Error:", result);
             
-            // Check if the error is related to FPX maintenance
             if (result && typeof result === 'object' && 
                 (JSON.stringify(result).toLowerCase().includes('fpx') && 
                 (JSON.stringify(result).toLowerCase().includes('maintenance') || 
@@ -225,7 +227,8 @@ export default async function handler(req, res) {
             });
         }
     } catch (error) {
-        console.error('Server Error:', error);
+        // This outer catch block ensures we ALWAYS return JSON, preventing the "Unexpected token A" error
+        console.error('Server Error (Outer Catch):', error);
         return res.status(500).json({ 
             success: false, 
             error: 'An internal server error occurred.',

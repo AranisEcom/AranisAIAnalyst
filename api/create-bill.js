@@ -3,8 +3,6 @@ import { createClient } from '@supabase/supabase-js';
 // ==========================================
 // === SUPABASE CONFIGURATION ===
 // ==========================================
-// Ideally, store these in .env.local
-// process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY
 const supabaseUrl = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzc5OTA0MSwiZXhwIjoyMDgzMzc1MDQxfQ.PDa6vUYNtdUCdXD0a5ycKC6WfuqiYGfK4LcDSghvszw';
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -20,7 +18,6 @@ export default async function handler(req, res) {
 
     try {
         console.log('=== Payment Request Started ===');
-        // Ensure we log the body safely
         console.log('Request Body:', JSON.stringify(req.body, null, 2));
 
         // Get data from the frontend request
@@ -73,7 +70,7 @@ export default async function handler(req, res) {
         const billPriceSetting = '1';
         const billPayorInfo = '1';
         
-        // Ensure amount is parsed as float before calculation
+        // Convert amount to cents (RM 10.00 = 1000)
         const billAmount = `${parseFloat(amount) * 100}`; 
         
         const billReturnUrl = 'https://aranis-aiadsanalyst.vercel.app/payment-successful.html';
@@ -89,8 +86,6 @@ export default async function handler(req, res) {
         const billChargeToCustomer = '1';
 
         // === FIX: Use URLSearchParams instead of FormData ===
-        // URLSearchParams is standard in Node.js and sends data as 'application/x-www-form-urlencoded',
-        // which is exactly what the ToyyibPay PHP example uses.
         const params = new URLSearchParams();
         params.append('userSecretKey', userSecretKey);
         params.append('categoryCode', categoryCode);
@@ -156,48 +151,8 @@ export default async function handler(req, res) {
 
             console.log('Bill created successfully! Bill Code:', billCode);
 
-            // Send InitiateCheckout event to Facebook Conversions API (Fire and Forget)
-            // We use .then() without await to avoid blocking the response to the user
-            try {
-                const pixelId = '2276519576162204';
-                const accessToken = 'EAAcJZCFldLZAYBP2Rt17ob7AJUEAPnCZCdiIOHZBereJjCRiofT1SottrBAL8EjPME1L6LANNoRN5I0yootHZCYioBgN2SUZBHPbUU93iRd54xOSeM7RbiHHIqemm6zM5p6GLIZAHNOezCVLROwIER8spOyZB3iC4wYTB1qZBADgHpWlZCpcZC0VA3Hi26sRJ85fwZDZD';
-                
-                fetch(`https://graph.facebook.com/v18.0/${pixelId}/events?access_token=${accessToken}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        data: [{
-                            event_name: 'InitiateCheckout',
-                            event_time: Math.floor(Date.now() / 1000),
-                            action_source: 'website',
-                            event_source_url: 'https://prostreamfb.vercel.app/',
-                            event_id: `checkout_${billExternalReferenceNo}`,
-                            user_data: {
-                                em: Buffer.from(email).toString('base64'),
-                                ph: Buffer.from(phone).toString('base64'),
-                                fn: Buffer.from(name.split(' ')[0]).toString('base64'),
-                                ln: Buffer.from(name.split(' ').slice(1).join(' ')).toString('base64'),
-                                client_user_agent: req.headers['user-agent'],
-                                client_ip_address: req.headers['x-forwarded-for'] || req.connection.remoteAddress
-                            },
-                            custom_data: {
-                                currency: 'MYR',
-                                value: (parseFloat(amount) * 100).toString(),
-                                content_name: 'Meta Analyst AI Prompt',
-                                content_category: 'Software',
-                                content_ids: ['meta_analyst_ai'],
-                                content_type: 'product'
-                            }
-                        }],
-                    })
-                })
-                .then(() => console.log('Facebook InitiateCheckout event sent successfully.'))
-                .catch(error => console.error('Error sending InitiateCheckout event:', error));
-
-            } catch (error) {
-                console.error('Error setting up Facebook event:', error);
-            }
-
+            // === FACEBOOK CODE REMOVED ===
+            
             // Send the successful response back to the frontend
             return res.status(200).json({ 
                 success: true, 
@@ -227,7 +182,7 @@ export default async function handler(req, res) {
             });
         }
     } catch (error) {
-        // This outer catch block ensures we ALWAYS return JSON, preventing the "Unexpected token A" error
+        // Outer catch block to prevent HTML errors
         console.error('Server Error (Outer Catch):', error);
         return res.status(500).json({ 
             success: false, 

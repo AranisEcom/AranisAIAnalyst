@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         // ==========================================
         
         const supabaseUrl = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2Nzc5OTA0MSwiZXhwIjoyMDgzMzc1MDQxfQ.PDa6vUYNtdUCdXD0a5ycKC6WfuqiYGfK4LcDSghvszw'; // Paste your FULL KEY HERE
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTkwNDEsImV4cCI6MjA4MzM3NTA0MX0.s9JJRy87h0l9od43w8hPI1Xg8jf-ka3qGKSz-nXwBwo'; // Paste your FULL KEY HERE
         const tableName = 'orders';
 
         console.log('STEP 1: Inserting data via REST...');

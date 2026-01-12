@@ -2,7 +2,6 @@
   "name": "toyyibpay-api",
   "version": "1.0.0",
   "description": "Payment API",
-  "main": "api/create-bill.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

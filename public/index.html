@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
+
+        <!-- META PIXEL -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1241100314677442');
+    fbq('track', 'PageView');
+    </script>
+    <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=1241100314677442&ev=PageView&noscript=1"/>
+    </noscript>
+
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meta Ads AI - Scale Bisnes Senang & Santai | ARANIS ECOM HUB</title>
@@ -1513,6 +1533,42 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
                 requestAnimationFrame(updateParticles);
             }
             updateParticles();
+
+            // ============================================================
+            // 9. META PIXEL: ViewContent
+            // ============================================================
+            try {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'ViewContent', {
+                        content_name: 'Master Prompt: Meta Analyst AI',
+                        content_category: 'Digital Product',
+                        content_type: 'product',
+                        content_ids: ['meta-analyst-ai'],
+                        currency: 'MYR',
+                        value: 35.90
+                    });
+                }
+            } catch (e) { console.log('[Pixel] ViewContent error:', e); }
+
+            // ============================================================
+            // 10. META PIXEL: Lead (bila klik mana-mana link ke checkout)
+            // ============================================================
+            document.querySelectorAll('a[href*="checkout.html"]').forEach(function(link) {
+                link.addEventListener('click', function () {
+                    try {
+                        if (typeof fbq !== 'undefined') {
+                            var leadEventId = 'lead_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                            fbq('track', 'Lead', {
+                                content_name: 'Master Prompt: Meta Analyst AI',
+                                content_category: 'Digital Product',
+                                currency: 'MYR',
+                                value: 35.90
+                            }, { eventID: leadEventId });
+                            console.log('[Pixel] Lead fired — eventID:', leadEventId);
+                        }
+                    } catch (e) { console.log('[Pixel] Lead error:', e); }
+                });
+            });
 
             // Trigger Confetti on specific buttons
             document.querySelectorAll('.cta-trigger').forEach(btn => {

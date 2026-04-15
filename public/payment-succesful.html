@@ -6,8 +6,26 @@
     <title>Pembayaran Berjaya | ARANIS ECOM</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- ★ META PIXEL — Ganti YOUR_PIXEL_ID -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', 'YOUR_PIXEL_ID');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" style="display:none"
+             src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+    </noscript>
+
     <style>
-        /* --- STYLES MATCHING CHECKOUT --- */
         :root {
             --bg-dark: #0f1115;
             --bg-card: #181b21;
@@ -18,6 +36,7 @@
             --text-muted: #9ca3af;
             --danger: #ef4444;
             --gradient-text: linear-gradient(90deg, #c084fc, #60a5fa);
+            --gradient-bg: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,88 +49,97 @@
             padding: 20px;
         }
 
-        .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.3; }
+        .bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; opacity: 0.3; pointer-events: none; }
         .orb-1 { width: 400px; height: 400px; background: var(--primary); top: -100px; left: -100px; }
         .orb-2 { width: 300px; height: 300px; background: var(--secondary); bottom: 0; right: -50px; }
 
-        .container { max-width: 600px; width: 100%; text-align: center; position: relative; z-index: 10; }
+        .container { max-width: 500px; width: 100%; text-align: center; position: relative; z-index: 10; }
         
         .card {
             background: var(--bg-card);
             border: 1px solid rgba(255,255,255,0.05);
             border-radius: 24px;
-            padding: 40px;
+            padding: 40px 30px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.3);
         }
 
         .icon-circle {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: rgba(52, 211, 153, 0.1);
-            color: var(--accent);
+            width: 76px; height: 76px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 2.5rem; margin: 0 auto 25px;
+            font-size: 2rem; margin: 0 auto 24px;
             animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .icon-circle.success { background: rgba(52, 211, 153, 0.1); color: var(--accent); }
+        .icon-circle.pending { background: rgba(251, 191, 36, 0.1); color: #fbbf24; }
+        .icon-circle.fail    { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .icon-circle.warn    { background: rgba(251, 146, 60, 0.1); color: #fb923c; }
 
-        .icon-circle.fail {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        h1 { font-size: 2rem; margin-bottom: 15px; font-weight: 800; }
+        h1 { font-size: 1.7rem; margin-bottom: 12px; font-weight: 800; line-height: 1.2; }
         h1 span { background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p { color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; }
+        p { color: var(--text-muted); margin-bottom: 20px; line-height: 1.6; font-size: 0.92rem; }
+        p.small { font-size: 0.78rem; color: #555; margin-top: 15px; }
 
         .detail-box {
             background: rgba(255,255,255,0.03);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px 18px;
             text-align: left;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border: 1px solid rgba(255,255,255,0.05);
         }
-
         .detail-row {
-            display: flex; justify-content: space-between;
-            margin-bottom: 10px; font-size: 0.9rem;
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 6px; font-size: 0.82rem;
         }
         .detail-row:last-child { margin-bottom: 0; }
         .label { color: var(--text-muted); }
-        .value { color: white; font-weight: 600; }
+        .value { color: white; font-weight: 600; font-family: monospace; font-size: 0.78rem; }
 
         .btn {
-            display: inline-block;
-            background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: 0.3s;
-            font-weight: 600;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 14px 28px; border-radius: 50px; text-decoration: none;
+            font-weight: 700; font-size: 0.9rem; transition: all 0.3s;
+            border: none; cursor: pointer; width: 100%;
         }
-        .btn:hover { background: rgba(255,255,255,0.1); }
-        .btn.primary { background: var(--primary); border-color: var(--primary); }
-        .btn.primary:hover { background: #7c3aed; }
+        .btn-primary {
+            background: var(--gradient-bg); color: white;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4); }
+        .btn-ghost {
+            background: transparent; color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.05); color: white; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 5px; }
+
+        .divider { border: none; border-top: 1px solid rgba(255,255,255,0.05); margin: 20px 0; }
 
         @keyframes popIn {
             0% { transform: scale(0); }
             100% { transform: scale(1); }
         }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 0.4s ease-out 0.2s both; }
 
         .loader {
             border: 4px solid rgba(255,255,255,0.1);
             border-left-color: var(--accent);
             border-radius: 50%;
-            width: 40px; height: 40px;
-            animation: spin 1s linear infinite;
+            width: 34px; height: 34px;
+            animation: spin 0.8s linear infinite;
             margin: 20px auto;
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         @media (max-width: 480px) {
-            h1 { font-size: 1.5rem; }
-            .card { padding: 25px; }
+            h1 { font-size: 1.45rem; }
+            .card { padding: 28px 20px; }
+            .btn { padding: 13px 20px; font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -122,130 +150,321 @@
 
     <div class="container">
         <div class="card" id="main-card">
-            <!-- Content will be injected here via JS -->
             <div class="loader"></div>
             <p>Memproses status pembayaran...</p>
         </div>
     </div>
 
-    <!-- Javascript Logic -->
     <script>
+        // =============================================
+        // ★ CONFIGURATION
+        // =============================================
+        // Ganti dengan URL Google Script yang sama di checkout.html
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypXoKwae2sZAfrvJ4UO6ODKfefOubF_1s3dEppD4Lw_zClGKy_sdgsJ2s2XD9WGxKk/exec';
+        
+        // Ganti dengan nombor WhatsApp anda
+        const SUPPORT_WHATSAPP = '601127412402';
+
+        // =============================================
         document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const statusId = urlParams.get('status_id');
-            const billCode = urlParams.get('billcode');
-            const orderId = urlParams.get('orderid'); // This is our Supabase ID
-            const transactionId = urlParams.get('transaction_id');
-            const msg = urlParams.get('msg');
+            const params   = new URLSearchParams(window.location.search);
+            const statusId = params.get('status_id');
+            const billCode = params.get('billcode');
+            const orderId  = params.get('order_id');    // ★ URL returns order_id
+            const txnId    = params.get('transaction_id');
+            const msg      = params.get('msg');
 
-            const mainCard = document.getElementById('main-card');
+            const card = document.getElementById('main-card');
 
-            // 1. CHECK IF REDIRECTED FROM TOYYIBPAY
-            if (statusId) {
-                console.log('🔍 ToyyibPay redirect detected. Status ID:', statusId);
-
-                // Status 1 = Success, 2 = Pending, 3 = Failed
-                const isSuccess = statusId === '1';
-
-                if (!isSuccess) {
-                    // HANDLE FAILURE / PENDING
-                    const statusText = statusId === '2' ? 'Dalam Proses' : statusId === '3' ? 'Gagal' : 'Tidak Diketahui';
-                    
-                    mainCard.innerHTML = `
-                        <div class="icon-circle fail">
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <h1>Pembayaran ${statusText}</h1>
-                        <p>${msg || 'Terjadi masalah semasa pembayaran. Sila cuba lagi atau hubungi kami.'}</p>
-                        
-                        <div class="detail-box">
-                            <div class="detail-row"><span class="label">No. Bil:</span><span class="value">${billCode || 'N/A'}</span></div>
-                            <div class="detail-row"><span class="label">ID Transaksi:</span><span class="value">${transactionId || 'N/A'}</span></div>
-                        </div>
-
-                        <a href="https://aranis-aiadsanalyst.vercel.app/checkout.html" class="btn primary">Kembali ke Checkout</a>
-                        <br><br>
-                        <a href="https://wa.me/60172703949?text=Saya ada masalah dengan pembayaran Order ${billCode}" target="_blank" class="btn">Hubungi WhatsApp</a>
-                    `;
-                    return; // Stop execution
-                }
-
-                // --- PAYMENT SUCCESSFUL FLOW ---
-                console.log('✅ Payment Successful! Proceeding with backend tasks...');
-
-                // Call Backend API to update DB and send Email
-                processSuccessfulPayment(orderId);
-
-            } else {
-                // --- DIRECT ACCESS (No params) ---
-                mainCard.innerHTML = `
-                    <div class="icon-circle fail">
-                        <i class="fas fa-question"></i>
-                    </div>
-                    <h1>Tiada Data Pesanan</h1>
-                    <p>Halaman ini sepatutnya diakses selepas pembayaran.</p>
-                    <a href="https://aranis-aiadsanalyst.vercel.app/" class="btn primary">Kembali ke Utama</a>
-                `;
+            // ── NO PARAMS ──
+            if (!statusId) {
+                card.innerHTML = renderNoAccess();
+                return;
             }
+
+            // ── STATUS 1: SUCCESS ──
+            if (statusId === '1') {
+                firePixelPurchase(orderId, txnId);
+                processSuccess(card, orderId, billCode);
+                return;
+            }
+
+            // ── STATUS 2: PENDING ──
+            if (statusId === '2') {
+                card.innerHTML = renderPending(orderId, billCode);
+                return;
+            }
+
+            // ── STATUS 3: FAILED ──
+            if (statusId === '3') {
+                card.innerHTML = renderFailed(orderId, billCode, txnId, msg);
+                return;
+            }
+
+            // ── UNKNOWN ──
+            card.innerHTML = renderUnknown(orderId, billCode);
         });
 
-        async function processSuccessfulPayment(orderId) {
-            const mainCard = document.getElementById('main-card');
-            
-            // Call API to Update Supabase & Send Brevo Email
+        // =============================================
+        // SUCCESS: Update Google Sheet + Send Email
+        // =============================================
+        async function processSuccess(card, orderId, billCode) {
             try {
-                const response = await fetch('/api/process-payment', {
+                // Call Google Script → updatePayment action
+                const formData = new URLSearchParams();
+                formData.append('action', 'updatePayment');
+                formData.append('orderId', orderId);
+
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ orderId })
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData,
+                    redirect: 'follow'  // Critical for Google Scripts
                 });
 
                 const result = await response.json();
+                console.log('Google Script updatePayment result:', result);
 
-                if (result.success) {
-                    // 1. Display Success UI
-                    mainCard.innerHTML = `
-                        <div class="icon-circle">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <h1>Pembayaran <span>Berjaya!</span></h1>
-                        <p>Terima kasih kerana membeli Master Prompt Meta Analyst AI. Kami telah menghantar e-mel pengesahan kepada anda.</p>
-                        
-                        <div class="detail-box">
-                            <div class="detail-row"><span class="label">ID Pesanan:</span><span class="value">#${orderId}</span></div>
-                            <div class="detail-row"><span class="label">Status:</span><span class="value" style="color:var(--accent)">Lunas / Paid</span></div>
-                        </div>
-
-                        <a href="https://aranis-aiadsanalyst.vercel.app/" class="btn primary">Kembali ke Utama</a>
-                    `;
-
-                    // 2. SEND META PIXEL CONVERSION (Optional but recommended)
-                    // Assuming you have a Pixel ID. Use the one from create-bill.js
-                    // pixelId = '2276519576162204'; 
-                    // sendMetaPixelEvent(pixelId, orderId);
-                    
+                if (result.status === 'success') {
+                    // Full success: Sheet updated + Email sent
+                    card.innerHTML = renderFullSuccess(orderId, billCode);
                 } else {
-                    throw new Error(result.error || 'Unknown error');
+                    // Script responded but with error
+                    throw new Error(result.message || 'Sheet update failed');
                 }
 
             } catch (error) {
-                console.error('Error processing payment:', error);
-                // Show partial success (Payment worked but DB/Email failed)
-                mainCard.innerHTML = `
-                    <div class="icon-circle" style="color: orange; background: rgba(255,165,0,0.1)">
-                        <i class="fas fa-exclamation"></i>
-                    </div>
-                    <h1>Pembayaran Diterima</h1>
-                    <p>Pembayaran anda berjaya, tetapi kami menghadapi masalah teknikal kecil menghantar e-mel. Jangan risau, pesanan anda telah disimpan. Sila WhatsApp kami jika tiada e-mel dalam 1 jam.</p>
-                    <a href="https://wa.me/60172703949?text=Tiada email, Order ID ${orderId}" target="_blank" class="btn primary">Hubungi Support</a>
-                `;
+                console.error('Update failed:', error);
+                
+                // Payment IS successful, but backend update failed
+                // Customer still gets product via ToyyibPay callback or manual check
+                card.innerHTML = renderPartialSuccess(orderId, billCode, error.message);
             }
         }
 
-        // Optional: Pixel helper
-        function sendMetaPixelEvent(pixelId, orderId) {
-            // Basic implementation if you want to fire Purchase event here too
-            // window.fbq('track', 'Purchase', { value: 35.90, currency: 'MYR', order_id: orderId });
+        // =============================================
+        // RENDER: Full Success
+        // =============================================
+        function renderFullSuccess(orderId, billCode) {
+            return `
+                <div class="icon-circle success">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h1>Pembayaran <span>Berjaya!</span></h1>
+                <p>E-mel pengesahan dengan akses produk telah dihantar ke inbox anda.</p>
+
+                <div class="detail-box fade-in">
+                    <div class="detail-row">
+                        <span class="label">ID Pesanan</span>
+                        <span class="value">${orderId || '-'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">No. Bil</span>
+                        <span class="value">${billCode || '-'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Status</span>
+                        <span class="value" style="color:var(--accent);">✓ Lunas</span>
+                    </div>
+                </div>
+
+                <div class="btn-group fade-in">
+                    <a href="https://aranis-aiadsanalyst.vercel.app/" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Kembali ke Laman Utama
+                    </a>
+                </div>
+
+                <p class="small fade-in">
+                    Tiada e-mel? Semak folder <strong>Spam/Junk</strong>. 
+                    <a href="https://wa.me/${SUPPORT_WHATSAPP}?text=Halo, saya sudah bayar tapi belum terima email. Order ID: ${orderId}" 
+                       target="_blank" style="color:var(--primary); text-decoration:none;">Hubungi Kami</a>
+                </p>
+            `;
+        }
+
+        // =============================================
+        // RENDER: Partial Success (Payment ok, backend fail)
+        // =============================================
+        function renderPartialSuccess(orderId, billCode, errorMsg) {
+            return `
+                <div class="icon-circle warn">
+                    <i class="fas fa-exclamation"></i>
+                </div>
+                <h1>Pembayaran <span>Diterima</span></h1>
+                <p>Pembayaran anda berjaya, tetapi kami menghadapi masalah teknikal kecil menghantar e-mel. Jangan risau — pesanan anda telah direkodkan.</p>
+
+                <div class="detail-box fade-in">
+                    <div class="detail-row">
+                        <span class="label">ID Pesanan</span>
+                        <span class="value">${orderId || '-'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">No. Bil</span>
+                        <span class="value">${billCode || '-'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Status</span>
+                        <span class="value" style="color:#fb923c;">⚠ Perlu Sahkan</span>
+                    </div>
+                </div>
+
+                <div class="btn-group fade-in">
+                    <a href="https://wa.me/${SUPPORT_WHATSAPP}?text=Halo, payment saya berjaya tapi tak terima email auto. Order ID: ${orderId}" 
+                       target="_blank" class="btn btn-primary">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Kami untuk E-mel
+                    </a>
+                    <a href="https://aranis-aiadsanalyst.vercel.app/" class="btn btn-ghost">
+                        <i class="fas fa-home"></i> Kembali ke Laman Utama
+                    </a>
+                </div>
+            `;
+        }
+
+        // =============================================
+        // RENDER: Pending
+        // =============================================
+        function renderPending(orderId, billCode) {
+            return `
+                <div class="icon-circle pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h1>Pembayaran <span>Dalam Proses</span></h1>
+                <p>Transaksi anda sedang diproses oleh bank. Ini biasanya mengambil beberapa minit sahaja.</p>
+
+                <div class="detail-box fade-in">
+                    <div class="detail-row">
+                        <span class="label">ID Pesanan</span>
+                        <span class="value">${orderId || '-'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">No. Bil</span>
+                        <span class="value">${billCode || '-'}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Status</span>
+                        <span class="value" style="color:#fbbf24;">⏳ Menunggu</span>
+                    </div>
+                </div>
+
+                <div class="btn-group fade-in">
+                    <a href="javascript:void(0)" class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-sync-alt"></i> Semak Semula Status
+                    </a>
+                </div>
+
+                <p class="small fade-in">
+                    Dah lebih 15 minit masih pending? 
+                    <a href="https://wa.me/${SUPPORT_WHATSAPP}?text=Halo, payment saya masih pending. Order ID: ${orderId}" 
+                       target="_blank" style="color:var(--primary); text-decoration:none;">Hubungi Kami</a>
+                </p>
+            `;
+        }
+
+        // =============================================
+        // RENDER: Failed
+        // =============================================
+        function renderFailed(orderId, billCode, txnId, msg) {
+            const decodedMsg = msg ? decodeURIComponent(msg) : 'Transaksi tidak berjaya. Sila cuba lagi.';
+            
+            return `
+                <div class="icon-circle fail">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h1>Pembayaran <span>Gagal</span></h1>
+                <p>${decodedMsg}</p>
+
+                <div class="detail-box fade-in">
+                    <div class="detail-row">
+                        <span class="label">No. Bil</span>
+                        <span class="value">${billCode || '-'}</span>
+                    </div>
+                    ${txnId ? `
+                    <div class="detail-row">
+                        <span class="label">ID Transaksi</span>
+                        <span class="value">${txnId}</span>
+                    </div>` : ''}
+                </div>
+
+                <div class="btn-group fade-in">
+                    <a href="https://aranis-aiadsanalyst.vercel.app/checkout.html" class="btn btn-primary">
+                        <i class="fas fa-redo"></i> Cuba Bayar Semula
+                    </a>
+                    <a href="https://wa.me/${SUPPORT_WHATSAPP}?text=Halo, payment saya gagal. Bill Code: ${billCode}" 
+                       target="_blank" class="btn btn-ghost">
+                        <i class="fab fa-whatsapp"></i> Hubungi WhatsApp
+                    </a>
+                </div>
+            `;
+        }
+
+        // =============================================
+        // RENDER: Unknown Status
+        // =============================================
+        function renderUnknown(orderId, billCode) {
+            return `
+                <div class="icon-circle warn">
+                    <i class="fas fa-question"></i>
+                </div>
+                <h1>Status <span>Tidak Pasti</span></h1>
+                <p>Kami tidak dapat mengesan status pembayaran anda. Jika wang sudah ditolak, pesanan anda tetap selamat.</p>
+
+                <div class="detail-box fade-in">
+                    <div class="detail-row">
+                        <span class="label">ID Pesanan</span>
+                        <span class="value">${orderId || '-'}</span>
+                    </div>
+                </div>
+
+                <div class="btn-group fade-in">
+                    <a href="https://wa.me/${SUPPORT_WHATSAPP}?text=Halo, status payment saya tak pasti. Order ID: ${orderId}" 
+                       target="_blank" class="btn btn-primary">
+                        <i class="fab fa-whatsapp"></i> Hubungi Kami untuk Sahkan
+                    </a>
+                    <a href="https://aranis-aiadsanalyst.vercel.app/" class="btn btn-ghost">
+                        <i class="fas fa-home"></i> Kembali ke Utama
+                    </a>
+                </div>
+            `;
+        }
+
+        // =============================================
+        // RENDER: No Access
+        // =============================================
+        function renderNoAccess() {
+            return `
+                <div class="icon-circle fail">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h1>Tiada Data Pesanan</h1>
+                <p>Halaman ini hanya boleh diakses selepas proses pembayaran.</p>
+                <div class="btn-group fade-in">
+                    <a href="https://aranis-aiadsanalyst.vercel.app/" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Kembali ke Utama
+                    </a>
+                </div>
+            `;
+        }
+
+        // =============================================
+        // META PIXEL: Purchase Event
+        // =============================================
+        function firePixelPurchase(orderId, txnId) {
+            try {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Purchase', {
+                        value: 35.90,
+                        currency: 'MYR',
+                        content_name: 'Master Prompt: Meta Analyst AI',
+                        content_category: 'Digital Product',
+                        content_ids: ['meta-analyst-ai'],
+                        content_type: 'product',
+                        order_id: orderId,
+                        transaction_id: txnId
+                    });
+                }
+            } catch (e) {
+                console.log('Pixel error:', e);
+            }
         }
     </script>
 </body>

@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
+
+        <!-- META PIXEL -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1241100314677442');
+    fbq('track', 'PageView');
+    </script>
+    <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=1241100314677442&ev=PageView&noscript=1"/>
+    </noscript>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Meta Ads AI | ARANIS ECOM HUB</title>
@@ -274,57 +293,73 @@
         </div>
     </div>
 
-    <script>
+        <script>
         // =============================================
-        // CONFIGURATION — TUKAR URL DI BAWAH NI
+        // CONFIGURATION
         // =============================================
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypXoKwae2sZAfrvJ4UO6ODKfefOubF_1s3dEppD4Lw_zClGKy_sdgsJ2s2XD9WGxKk/exec';
         const BACKEND_API_URL   = '/api/create-bill';
+        const CAPI_ENDPOINT     = '/api/conversion-api';
+        const PIXEL_ID          = '1241100314677442';
         // =============================================
+
+        // SHA-256 hashing untuk CAPI enhanced matching
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(function(b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+        }
+
+        // Baca cookie (untuk _fbc dan _fbp)
+        function getCookie(name) {
+            var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+            return match ? decodeURIComponent(match[2]) : '';
+        }
 
         document.getElementById('checkout-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            document.querySelectorAll('.form-input').forEach(input => input.classList.remove('error'));
+            document.querySelectorAll('.form-input').forEach(function(input) { input.classList.remove('error'); });
 
-            const name  = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            let isValid = true;
+            var name  = document.getElementById('name').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+            var isValid = true;
 
             if (name === "") {
                 showError('name', "Sila masukkan nama anda.");
                 isValid = false;
             }
 
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 showError('email', "Format e-mel tidak sah. Contoh: user@gmail.com");
                 isValid = false;
             }
 
-            const cleanPhone = phone.replace(/[\s-]/g, '');
-            const phoneRegex = /^01\d{8,9}$/;
+            var cleanPhone = phone.replace(/[\s\-+]/g, '');
+            var phoneRegex = /^01\d{8,9}$/;
             if (!phoneRegex.test(cleanPhone)) {
                 showError('phone', "Nombor telefon tidak sah. Pastikan bermula dengan '01' dan 10-11 digit.");
                 isValid = false;
             }
 
             if (isValid) {
-                await processOrder({ name, email, phone });
+                await processOrder({ name: name, email: email, phone: cleanPhone });
             }
         });
 
         function showError(fieldId, message) {
-            const input = document.getElementById(fieldId);
+            var input = document.getElementById(fieldId);
             input.classList.add('error');
-            let helper = input.nextElementSibling;
-            const originalText = helper.innerHTML;
+            var helper = input.nextElementSibling;
+            var originalText = helper.innerHTML;
             
             helper.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--danger)"></i> ' + message;
             helper.style.color = "var(--danger)";
             
-            setTimeout(() => {
+            setTimeout(function() {
                 helper.innerHTML = originalText;
                 helper.style.color = "var(--text-muted)";
                 input.classList.remove('error');
@@ -332,23 +367,108 @@
         }
 
         async function processOrder(data) {
-            const btn      = document.getElementById('pay-btn');
-            const spinner  = document.getElementById('btn-spinner');
-            const btnText  = document.getElementById('btn-text');
-            const btnIcon  = document.getElementById('btn-icon');
+            var btn      = document.getElementById('pay-btn');
+            var spinner  = document.getElementById('btn-spinner');
+            var btnText  = document.getElementById('btn-text');
+            var btnIcon  = document.getElementById('btn-icon');
 
             btn.disabled = true;
             spinner.style.display = 'inline-block';
-            btnText.innerText = 'Menyimpan data...';
+            btnText.innerText = 'Menyediakan pembayaran...';
             btnIcon.style.display = 'none';
 
+            // =============================================
+            // STEP 1: Hash user data untuk Pixel + CAPI
+            // =============================================
             try {
-                // ==========================================
-                // PHASE 1: SAVE TO GOOGLE SHEET
-                // ==========================================
+                var hashedEmail = await sha256(data.email.toLowerCase().trim());
+                var hashedPhone = await sha256(data.phone);
+                var fbc = getCookie('_fbc');
+                var fbp = getCookie('_fbp');
+
+                console.log('[CAPI] hashedEmail:', hashedEmail);
+                console.log('[CAPI] hashedPhone:', hashedPhone);
+                console.log('[CAPI] _fbc:', fbc);
+                console.log('[CAPI] _fbp:', fbp);
+
+                // Simpan dalam localStorage untuk digunakan di payment-successful.html
+                localStorage.setItem('meta_capi_data', JSON.stringify({
+                    em: hashedEmail,
+                    ph: hashedPhone,
+                    fbc: fbc,
+                    fbp: fbp
+                }));
+
+                // =============================================
+                // STEP 2: Pixel — Enhanced Matching + InitiateCheckout
+                // =============================================
+                var icoEventId = 'ico_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+                // Re-init dengan user data untuk enhanced matching
+                fbq('init', PIXEL_ID, {
+                    em: hashedEmail,
+                    ph: hashedPhone
+                });
+
+                fbq('track', 'InitiateCheckout', {
+                    content_ids: ['meta-analyst-ai'],
+                    content_name: 'Master Prompt: Meta Analyst AI',
+                    content_category: 'Digital Product',
+                    content_type: 'product',
+                    currency: 'MYR',
+                    value: 35.90,
+                    num_items: 1
+                }, { eventID: icoEventId });
+
+                console.log('[Pixel] InitiateCheckout fired — eventID:', icoEventId);
+
+                // =============================================
+                // STEP 3: CAPI — InitiateCheckout (server-side)
+                // Fire tanpa await — jangan block redirect
+                // =============================================
+                fetch(CAPI_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event_name: 'InitiateCheckout',
+                        event_id: icoEventId,
+                        event_source_url: window.location.href,
+                        action_source: 'website',
+                        user_data: {
+                            em: hashedEmail,
+                            ph: hashedPhone,
+                            fbc: fbc,
+                            fbp: fbp
+                        },
+                        custom_data: {
+                            currency: 'MYR',
+                            value: 35.90,
+                            content_ids: ['meta-analyst-ai'],
+                            content_name: 'Master Prompt: Meta Analyst AI',
+                            content_category: 'Digital Product',
+                            content_type: 'product',
+                            num_items: 1
+                        }
+                    })
+                }).then(function(r) { return r.json(); })
+                  .then(function(result) {
+                      console.log('[CAPI] InitiateCheckout response:', result);
+                  })
+                  .catch(function(err) {
+                      console.log('[CAPI] InitiateCheckout error:', err);
+                  });
+
+            } catch (pixelErr) {
+                console.log('[Pixel/CAPI] Error:', pixelErr);
+            }
+
+            // =============================================
+            // STEP 4: Sambung proses biasa (Google Sheet → ToyyibPay)
+            // =============================================
+            try {
                 console.log('Saving to Google Sheets...');
 
-                const sheetResponse = await fetch(GOOGLE_SCRIPT_URL, {
+                var sheetResponse = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({
@@ -364,22 +484,19 @@
                     throw new Error('Gagal menyimpan data. Kod: ' + sheetResponse.status);
                 }
 
-                const sheetResult = await sheetResponse.json();
+                var sheetResult = await sheetResponse.json();
 
                 if (!sheetResult.success) {
                     throw new Error(sheetResult.error || 'Gagal menyimpan ke Google Sheet.');
                 }
 
-                const orderId = sheetResult.orderId;
+                var orderId = sheetResult.orderId;
                 console.log('Order ID dari Sheet:', orderId);
 
-                // ==========================================
-                // PHASE 2: CALL BACKEND API (TOYYIBPAY)
-                // ==========================================
                 console.log('Creating Bill...');
                 btnText.innerText = 'Mencipta bil...';
 
-                const response = await fetch(BACKEND_API_URL, {
+                var response = await fetch(BACKEND_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -392,7 +509,7 @@
                     })
                 });
 
-                const result = await response.json();
+                var result = await response.json();
 
                 if (!response.ok) {
                     throw new Error(result.error || 'Server error');
@@ -412,10 +529,10 @@
         }
 
         function resetButton() {
-            const btn      = document.getElementById('pay-btn');
-            const spinner  = document.getElementById('btn-spinner');
-            const btnText  = document.getElementById('btn-text');
-            const btnIcon  = document.getElementById('btn-icon');
+            var btn      = document.getElementById('pay-btn');
+            var spinner  = document.getElementById('btn-spinner');
+            var btnText  = document.getElementById('btn-text');
+            var btnIcon  = document.getElementById('btn-icon');
 
             btn.disabled = false;
             spinner.style.display = 'none';

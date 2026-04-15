@@ -176,6 +176,15 @@
 
             const card = document.getElementById('main-card');
 
+            // ── ELAKKAN DUPLICATE PURCHASE pada refresh ──
+            if (statusId === '1' && sessionStorage.getItem('purchase_fired_' + orderId)) {
+                // Purchase sudah pernah di-fire, skip Pixel/CAPI tapi tunjuk UI biasa
+                processSuccess(card, orderId, billCode);
+                return;
+            }
+
+    
+
             // ── NO PARAMS ──
             if (!statusId) {
                 card.innerHTML = renderNoAccess();
@@ -491,6 +500,11 @@
 
             console.log('[Pixel+CAPI] Purchase eventID:', eventId);
             console.log('[Pixel+CAPI] Stored CAPI data:', capiData);
+
+            // Tanda sebagai sudah di-fire — elakkan duplicate pada refresh
+            if (orderId) {
+                sessionStorage.setItem('purchase_fired_' + orderId, '1');
+            }
 
             // --- PIXEL: Purchase ---
             try {

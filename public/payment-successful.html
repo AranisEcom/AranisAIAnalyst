@@ -17,12 +17,12 @@
         t.src=v;s=b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', 'YOUR_PIXEL_ID');
+        fbq('init', '1241100314677442');
         fbq('track', 'PageView');
     </script>
     <noscript>
         <img height="1" width="1" style="display:none"
-             src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+             src="https://www.facebook.com/tr?id=1241100314677442&ev=PageView&noscript=1"/>
     </noscript>
 
     <style>
@@ -476,10 +476,23 @@
             `;
         }
 
-        // =============================================
-        // META PIXEL: Purchase Event
+                // =============================================
+        // META PIXEL + CAPI: Purchase Event
+        // eventID = purchase_{orderId} untuk deduplication
         // =============================================
         function firePixelPurchase(orderId, txnId) {
+            var eventId = 'purchase_' + (orderId || txnId || Date.now());
+
+            // Baca hashed user data dari localStorage (diset oleh checkout.html)
+            var capiData = null;
+            try {
+                capiData = JSON.parse(localStorage.getItem('meta_capi_data') || 'null');
+            } catch (e) { /* ignore */ }
+
+            console.log('[Pixel+CAPI] Purchase eventID:', eventId);
+            console.log('[Pixel+CAPI] Stored CAPI data:', capiData);
+
+            // --- PIXEL: Purchase ---
             try {
                 if (typeof fbq !== 'undefined') {
                     fbq('track', 'Purchase', {
@@ -491,10 +504,52 @@
                         content_type: 'product',
                         order_id: orderId,
                         transaction_id: txnId
-                    });
+                    }, { eventID: eventId });
+                    console.log('[Pixel] Purchase fired');
                 }
             } catch (e) {
-                console.log('Pixel error:', e);
+                console.log('[Pixel] Purchase error:', e);
+            }
+
+            // --- CAPI: Purchase (server-side via Vercel) ---
+            if (capiData) {
+                fetch('/api/conversion-api', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        event_name: 'Purchase',
+                        event_id: eventId,
+                        event_source_url: window.location.href,
+                        action_source: 'website',
+                        user_data: {
+                            em: capiData.em || '',
+                            ph: capiData.ph || '',
+                            fbc: capiData.fbc || '',
+                            fbp: capiData.fbp || ''
+                        },
+                        custom_data: {
+                            currency: 'MYR',
+                            value: 35.90,
+                            content_ids: ['meta-analyst-ai'],
+                            content_name: 'Master Prompt: Meta Analyst AI',
+                            content_category: 'Digital Product',
+                            content_type: 'product',
+                            order_id: orderId,
+                            transaction_id: txnId || ''
+                        }
+                    })
+                }).then(function(r) { return r.json(); })
+                  .then(function(result) {
+                      console.log('[CAPI] Purchase response:', result);
+                  })
+                  .catch(function(err) {
+                      console.log('[CAPI] Purchase error:', err);
+                  });
+
+                // Clear — hanya guna sekali
+                localStorage.removeItem('meta_capi_data');
+            } else {
+                console.log('[CAPI] Skip — tiada stored user data (user mungkin refresh page)');
             }
         }
     </script>

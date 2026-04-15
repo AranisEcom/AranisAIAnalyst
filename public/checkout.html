@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Meta Ads AI | ARANIS ECOM HUB</title>
     
-    <!-- 1. Load Supabase Library -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- STYLES (UNCHANGED) --- */
         :root {
             --bg-dark: #0f1115;
             --bg-card: #181b21;
@@ -45,7 +41,6 @@
 
         .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; width: 100%; }
         
-        /* Buttons */
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
             padding: 18px 32px; border-radius: 50px; font-weight: 700; text-transform: uppercase;
@@ -57,14 +52,12 @@
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px var(--primary-glow); }
         .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-        /* Header */
         header { padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(15, 17, 21, 0.8); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
         .nav-content { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; font-size: 1.2rem; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; }
         .back-link { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; gap: 8px; }
         .back-link:hover { color: white; }
 
-        /* Layout */
         .checkout-layout {
             display: grid;
             grid-template-columns: 1fr 1.5fr;
@@ -82,7 +75,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
-        /* Order Summary */
         .order-item { display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px dashed rgba(255,255,255,0.1); }
         .item-thumb { width: 70px; height: 70px; background: linear-gradient(135deg, #2d3748, #1a202c); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: var(--primary); border: 1px solid rgba(255,255,255,0.05); }
         .item-details h4 { font-size: 1rem; margin-bottom: 5px; color: #fff; }
@@ -93,7 +85,6 @@
         .highlight-price { color: var(--accent); font-size: 1.5rem; }
         .strike { text-decoration: line-through; color: #555; font-size: 0.85rem; }
 
-        /* Form Elements */
         .input-group { margin-bottom: 25px; position: relative; }
         .input-group label { 
             display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-main); 
@@ -116,14 +107,12 @@
         .form-input:focus { outline: none; border-color: var(--primary); background: rgba(139, 92, 246, 0.05); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
         .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1); }
 
-        /* Helper Text */
         .helper-text {
-            display: block; margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);
+            display: flex; margin-top: 6px; font-size: 0.8rem; color: var(--text-muted);
             display: flex; align-items: flex-start; gap: 5px;
         }
         .helper-text i { color: var(--secondary); margin-top: 3px; font-size: 0.7rem; }
 
-        /* Payment Box */
         .payment-method-display {
             background: rgba(255,255,255,0.03);
             border: 1px solid var(--primary);
@@ -159,7 +148,6 @@
             color: var(--accent); font-size: 0.85rem; font-weight: 600;
         }
 
-        /* Spinner */
         .spinner {
             width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3);
             border-radius: 50%; border-top-color: white;
@@ -167,7 +155,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Mobile */
         @media (max-width: 768px) {
             .checkout-layout { grid-template-columns: 1fr; gap: 30px; margin-top: 20px; }
             .order-summary-card { order: -1; }
@@ -180,11 +167,9 @@
 </head>
 <body>
 
-    <!-- Background Orbs -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
-    <!-- Header -->
     <header>
         <div class="container nav-content">
             <a href="#" class="logo"><i class="fas fa-rocket" style="color:var(--primary);"></i> ARANIS<span>ECOM</span></a>
@@ -195,7 +180,6 @@
     <div class="container">
         <div class="checkout-layout">
             
-            <!-- LEFT: Order Summary -->
             <aside class="checkout-card order-summary-card">
                 <h3 style="margin-bottom: 20px;">Ringkasan Pesanan</h3>
                 
@@ -230,28 +214,24 @@
                 </div>
             </aside>
 
-            <!-- RIGHT: Form Details -->
             <main class="checkout-card">
                 <h3 style="margin-bottom: 5px;">Butiran Pelanggan</h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Sila isi maklumat dengan betul untuk penghantaran produk.</p>
                 
                 <form id="checkout-form" novalidate>
                     
-                    <!-- Name Input -->
                     <div class="input-group">
                         <label for="name">Nama <span class="required-mark">*</span></label>
                         <input type="text" class="form-input" id="name" name="name" placeholder="Contoh: Ahmad" required>
                         <small class="helper-text"><i class="fas fa-info-circle"></i> Nama anda untuk tujuan pengenalan.</small>
                     </div>
 
-                    <!-- Email Input -->
                     <div class="input-group">
                         <label for="email">E-mel <span class="required-mark">*</span></label>
                         <input type="email" class="form-input" id="email" name="email" placeholder="contoh: email@gmail.com" required>
                         <small class="helper-text"><i class="fas fa-envelope-open-text"></i> Produk & Katalaluan akan dihantar ke e-mel ini.</small>
                     </div>
 
-                    <!-- Phone Input -->
                     <div class="input-group">
                         <label for="phone">Nombor Telefon (Malaysia) <span class="required-mark">*</span></label>
                         <input type="tel" class="form-input" id="phone" name="phone" placeholder="Contoh: 0123456789" maxlength="15" required>
@@ -260,7 +240,6 @@
 
                     <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 25px 0;">
 
-                    <!-- FPX Only Payment -->
                     <h3 style="margin-bottom: 15px;">Kaedah Pembayaran</h3>
                     
                     <div class="payment-method-display">
@@ -278,10 +257,8 @@
                         </div>
                     </div>
                     
-                    <!-- Hidden Input for Gateway -->
                     <input type="hidden" name="payment_method" value="fpx">
 
-                    <!-- Submit Action -->
                     <div style="margin-top: 35px;">
                         <button type="submit" class="btn" id="pay-btn">
                             <span class="spinner" id="btn-spinner"></span>
@@ -297,47 +274,43 @@
         </div>
     </div>
 
-    <!-- Javascript Logic -->
     <script>
-        // 1. CONFIGURATION
-        const SUPABASE_URL = 'https://ouijqobcjwmclrdmtfxf.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91aWpxb2JjandtY2xyZG10ZnhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3OTkwNDEsImV4cCI6MjA4MzM3NTA0MX0.s9JJRy87h0l9od43w8hPI1Xg8jf-ka3qGKSz-nXwBwo';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // =============================================
+        // CONFIGURATION — TUKAR URL DI BAWAH NI
+        // =============================================
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypXoKwae2sZAfrvJ4UO6ODKfefOubF_1s3dEppD4Lw_zClGKy_sdgsJ2s2XD9WGxKk/exec';
+        const BACKEND_API_URL   = '/api/create-bill';
+        // =============================================
 
         document.getElementById('checkout-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Reset errors
             document.querySelectorAll('.form-input').forEach(input => input.classList.remove('error'));
 
-            const name = document.getElementById('name').value.trim();
+            const name  = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
             let isValid = true;
 
-            // Validate Name
-            if(name === "") {
+            if (name === "") {
                 showError('name', "Sila masukkan nama anda.");
                 isValid = false;
             }
 
-            // Validate Email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if(!emailRegex.test(email)) {
+            if (!emailRegex.test(email)) {
                 showError('email', "Format e-mel tidak sah. Contoh: user@gmail.com");
                 isValid = false;
             }
 
-            // Validate Phone (Malaysia: Starts with 01, length 10-11 digits)
             const cleanPhone = phone.replace(/[\s-]/g, '');
-            const phoneRegex = /^01\d{8,9}$/; 
-            
-            if(!phoneRegex.test(cleanPhone)) {
+            const phoneRegex = /^01\d{8,9}$/;
+            if (!phoneRegex.test(cleanPhone)) {
                 showError('phone', "Nombor telefon tidak sah. Pastikan bermula dengan '01' dan 10-11 digit.");
                 isValid = false;
             }
 
-            if(isValid) {
+            if (isValid) {
                 await processOrder({ name, email, phone });
             }
         });
@@ -348,7 +321,7 @@
             let helper = input.nextElementSibling;
             const originalText = helper.innerHTML;
             
-            helper.innerHTML = `<i class="fas fa-exclamation-circle" style="color:var(--danger)"></i> ${message}`;
+            helper.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--danger)"></i> ' + message;
             helper.style.color = "var(--danger)";
             
             setTimeout(() => {
@@ -359,57 +332,62 @@
         }
 
         async function processOrder(data) {
-            const btn = document.getElementById('pay-btn');
-            const spinner = document.getElementById('btn-spinner');
-            const btnText = document.getElementById('btn-text');
-            const btnIcon = document.getElementById('btn-icon');
+            const btn      = document.getElementById('pay-btn');
+            const spinner  = document.getElementById('btn-spinner');
+            const btnText  = document.getElementById('btn-text');
+            const btnIcon  = document.getElementById('btn-icon');
 
-            // UI Loading State
             btn.disabled = true;
             spinner.style.display = 'inline-block';
-            btnText.innerText = 'Memproses...';
+            btnText.innerText = 'Menyimpan data...';
             btnIcon.style.display = 'none';
 
             try {
                 // ==========================================
-                // PHASE 1: SAVE TO SUPABASE
+                // PHASE 1: SAVE TO GOOGLE SHEET
                 // ==========================================
-                console.log('Saving to Supabase...');
-                const { data: orderData, error: dbError } = await supabase
-                    .from('orders')
-                    .insert([
-                        {
-                            name: data.name,
-                            email: data.email,
-                            phone: data.phone,
-                            amount: 35.90,
-                            status: 'pending'
-                        }
-                    ])
-                    .select(); // Important: Returns the inserted row with ID
+                console.log('Saving to Google Sheets...');
 
-                if (dbError) {
-                    throw new Error('Database Error: ' + dbError.message);
+                const sheetResponse = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        name:   data.name,
+                        email:  data.email,
+                        phone:  data.phone,
+                        amount: 35.90
+                    }),
+                    redirect: 'follow'
+                });
+
+                if (!sheetResponse.ok) {
+                    throw new Error('Gagal menyimpan data. Kod: ' + sheetResponse.status);
                 }
 
-                const orderId = orderData[0].id;
-                console.log('Order ID:', orderId);
+                const sheetResult = await sheetResponse.json();
+
+                if (!sheetResult.success) {
+                    throw new Error(sheetResult.error || 'Gagal menyimpan ke Google Sheet.');
+                }
+
+                const orderId = sheetResult.orderId;
+                console.log('Order ID dari Sheet:', orderId);
 
                 // ==========================================
-                // PHASE 2: CALL BACKEND API
+                // PHASE 2: CALL BACKEND API (TOYYIBPAY)
                 // ==========================================
                 console.log('Creating Bill...');
-                const response = await fetch('/api/create-bill', {
+                btnText.innerText = 'Mencipta bil...';
+
+                const response = await fetch(BACKEND_API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        id: orderId,          // Pass the ID to backend
-                        name: data.name,
-                        email: data.email,
-                        phone: data.phone,
-                        amount: 35.90,
+                        id:              orderId,
+                        name:            data.name,
+                        email:           data.email,
+                        phone:           data.phone,
+                        amount:          35.90,
                         billDescription: 'Master Prompt: Meta Analyst AI'
                     })
                 });
@@ -421,7 +399,6 @@
                 }
 
                 if (result.success && result.billUrl) {
-                    // Redirect to ToyyibPay
                     window.location.href = result.billUrl;
                 } else {
                     throw new Error('Gagal menjana bil pembayaran.');
@@ -429,16 +406,16 @@
 
             } catch (err) {
                 console.error(err);
-                alert(err.message || "Sila cuba lagi.");
+                alert(err.message || 'Sila cuba lagi.');
                 resetButton();
             }
         }
 
         function resetButton() {
-            const btn = document.getElementById('pay-btn');
-            const spinner = document.getElementById('btn-spinner');
-            const btnText = document.getElementById('btn-text');
-            const btnIcon = document.getElementById('btn-icon');
+            const btn      = document.getElementById('pay-btn');
+            const spinner  = document.getElementById('btn-spinner');
+            const btnText  = document.getElementById('btn-text');
+            const btnIcon  = document.getElementById('btn-icon');
 
             btn.disabled = false;
             spinner.style.display = 'none';

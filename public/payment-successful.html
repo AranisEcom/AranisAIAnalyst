@@ -160,10 +160,10 @@
         // ★ CONFIGURATION
         // =============================================
         // Ganti dengan URL Google Script yang sama di checkout.html
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbypXoKwae2sZAfrvJ4UO6ODKfefOubF_1s3dEppD4Lw_zClGKy_sdgsJ2s2XD9WGxKk/exec';
+        const GOOGLE_SCRIPT_URL = 'PASTE_YOUR_DEPLOYED_SCRIPT_URL_HERE';
         
         // Ganti dengan nombor WhatsApp anda
-        const SUPPORT_WHATSAPP = '601127412402';
+        const SUPPORT_WHATSAPP = '60XXXXXXXXX';
 
         // =============================================
         document.addEventListener('DOMContentLoaded', () => {
@@ -242,8 +242,8 @@
             }
         }
 
-        // =============================================
-        // RENDER: Full Success
+                // =============================================
+        // RENDER: Full Success (with email reminder)
         // =============================================
         function renderFullSuccess(orderId, billCode) {
             return `
@@ -251,7 +251,7 @@
                     <i class="fas fa-check"></i>
                 </div>
                 <h1>Pembayaran <span>Berjaya!</span></h1>
-                <p>E-mel pengesahan dengan akses produk telah dihantar ke inbox anda.</p>
+                <p>Pesanan anda telah disahkan.</p>
 
                 <div class="detail-box fade-in">
                     <div class="detail-row">
@@ -268,6 +268,37 @@
                     </div>
                 </div>
 
+                <!-- ★ EMAIL REMINDER BOX -->
+                <div class="email-reminder fade-in">
+                    <div class="reminder-icon">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div class="reminder-content">
+                        <strong>E-mel Pengesahan Dalam 10 Minit</strong>
+                        <p>Sila semak inbox anda untuk e-mel dari <strong>ARANIS ECOM</strong>. E-mel ini mengandungi akses penuh kepada produk anda.</p>
+                        
+                        <div class="reminder-steps">
+                            <div class="step">
+                                <span class="step-num">1</span>
+                                <span>Buka inbox e-mel anda</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">2</span>
+                                <span>Cari e-mel dari <strong>ARANIS ECOM</strong></span>
+                            </div>
+                            <div class="step">
+                                <span class="step-num">3</span>
+                                <span>Tiada? Semak folder <strong class="spam-highlight">Spam / Junk</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="spam-tip">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Jumpa di Spam? Buka e-mel → Klik <strong>"Not Spam"</strong> atau <strong>"Report bukan spam"</strong> supaya e-mel akan datang ke inbox.</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="btn-group fade-in">
                     <a href="https://aranis-aiadsanalyst.vercel.app/" class="btn btn-primary">
                         <i class="fas fa-home"></i> Kembali ke Laman Utama
@@ -275,9 +306,9 @@
                 </div>
 
                 <p class="small fade-in">
-                    Tiada e-mel? Semak folder <strong>Spam/Junk</strong>. 
-                    <a href="https://wa.me/${SUPPORT_WHATSAPP}?text=Halo, saya sudah bayar tapi belum terima email. Order ID: ${orderId}" 
-                       target="_blank" style="color:var(--primary); text-decoration:none;">Hubungi Kami</a>
+                    Dah lepas 10 minit masih tak terima e-mel? 
+                    <a href="https://wa.me/${SUPPORT_WHATSAPP}?text=Halo, saya sudah bayar tapi belum terima email selepas 10 minit. Order ID: ${orderId}" 
+                       target="_blank" style="color:var(--primary); text-decoration:none; font-weight:600;">WhatsApp Kami</a>
                 </p>
             `;
         }

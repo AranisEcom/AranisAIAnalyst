@@ -35,6 +35,7 @@ src="https://www.facebook.com/tr?id=1241100314677442&ev=PageView&noscript=1"
     --accent: #34d399;
     --money: #10b981;
     --danger: #ef4444;
+    --warning: #f59e0b;
     --text-main: #f3f4f6;
     --text-muted: #9ca3af;
     --gradient-bg: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
@@ -60,15 +61,15 @@ body {
 .highlight { color: var(--accent); font-weight: 700; }
 .strike { text-decoration: line-through; color: var(--text-muted); opacity: 0.6; }
 
-/* --- BACKGROUND ANIMATION - FIXED to prevent scrolling movement --- */
+/* --- BACKGROUND ANIMATION --- */
 .bg-orb {
-    position: fixed; /* CHANGED: was absolute, now fixed so it stays in viewport */
+    position: fixed; 
     border-radius: 50%; 
     filter: blur(80px); 
     z-index: 0; 
     opacity: 0.4;
     animation: float 10s infinite ease-in-out alternate;
-    pointer-events: none; /* ADDED: prevent any interaction */
+    pointer-events: none; 
 }
 .orb-1 { width: 300px; height: 300px; background: var(--primary); top: -50px; left: -100px; }
 .orb-2 { width: 400px; height: 400px; background: var(--secondary); bottom: 10%; right: -150px; animation-delay: -5s; }
@@ -101,14 +102,41 @@ body {
 .btn-primary:hover::after { left: 100%; }
 .btn-icon { margin-right: 10px; }
 
+/* --- ANNOUNCEMENT BAR --- */
+.announce-bar {
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(239, 68, 68, 0.1) 100%);
+    border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+    padding: 8px 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #fbbf24;
+    text-align: center;
+    letter-spacing: 0.3px;
+    position: relative;
+    z-index: 101;
+}
+.announce-bar .pulse-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--danger);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    animation: pulse-dot 1.5s infinite;
+}
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+}
+
 /* --- HEADER --- */
 header { 
     padding: 20px 0; 
     position: fixed; 
     width: 100%; 
     top: 0; 
-    left: 0; /* ADDED */
-    right: 0; /* ADDED */
+    left: 0; 
+    right: 0; 
     z-index: 100; 
     background: rgba(15, 17, 21, 0.85); 
     backdrop-filter: blur(12px); 
@@ -116,6 +144,9 @@ header {
     transition: 0.3s; 
 }
 header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+body.has-announce header { top: 33px; }
+body.has-announce .hero { padding-top: 173px; }
+
 .nav-content { display: flex; justify-content: space-between; align-items: center; }
 .logo { font-weight: 800; font-size: 1.2rem; color: white; text-decoration: none; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .logo span { background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -125,7 +156,7 @@ header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     padding: 140px 0 80px; 
     position: relative; 
     text-align: center; 
-    overflow: hidden; /* ADDED */
+    overflow: hidden; 
 }
 .hero-tag { 
     background: rgba(52, 211, 153, 0.1); color: var(--accent); padding: 6px 16px; 
@@ -142,6 +173,20 @@ header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px; padding: 0 10px; }
+
+/* --- BATCH URGENCY BADGE --- */
+.batch-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 12px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 0.82rem;
+    color: #fbbf24;
+}
+.batch-badge i { font-size: 0.9rem; }
+.batch-badge strong { color: #fde68a; }
 
 /* --- PAIN / SAKIT HATI --- */
 .section { padding: 60px 0; position: relative; }
@@ -179,7 +224,7 @@ header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     background: radial-gradient(circle at 50% 50%, #1a202c 0%, var(--bg-dark) 100%);
     border-top: 1px solid rgba(255,255,255,0.05);
     position: relative;
-    overflow: hidden; /* ADDED */
+    overflow: hidden; 
 }
 
 .timeline {
@@ -188,12 +233,10 @@ header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     margin: 50px auto 0;
     padding: 20px 0;
 }
-/* The Line */
 .timeline::before {
     content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px;
     background: #2d3748; transform: translateX(-50%); border-radius: 2px;
 }
-/* The Progress Line (Animated) */
 .timeline-progress {
     content: ''; position: absolute; top: 0; left: 50%; width: 4px;
     height: 0%;
@@ -291,348 +334,6 @@ header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     width: 100%;
     height: 100%;
 }
-
-/* --- MOBILE RESPONSIVE - COMPLETELY REWRITTEN --- */
-@media(max-width: 768px) {
-    
-    /* Container */
-    .container { 
-        padding: 0 16px; 
-    }
-
-    /* Background orbs - reduce size on mobile */
-    .orb-1 { width: 200px; height: 200px; }
-    .orb-2 { width: 250px; height: 250px; }
-
-    /* Header */
-    .nav-content .btn {
-        padding: 8px 14px !important;
-        font-size: 0.7rem !important;
-        letter-spacing: 0;
-    }
-    .nav-content .btn .btn-icon { 
-        margin-right: 4px; 
-        font-size: 0.7rem;
-    }
-
-    /* Hero */
-    .hero { 
-        padding: 120px 0 60px; 
-    }
-    .hero h1 { 
-        font-size: 1.9rem; 
-        letter-spacing: -0.5px;
-    }
-    .hero p { 
-        font-size: 1rem; 
-    }
-
-    /* Sections */
-    .section { 
-        padding: 50px 0; 
-    }
-
-    /* Pain Grid - Force single column */
-    .pain-grid { 
-        grid-template-columns: 1fr; 
-        gap: 16px;
-        margin-top: 30px;
-    }
-    .pain-card { 
-        padding: 24px; 
-    }
-    .pain-card:hover { 
-        transform: none; /* Disable hover lift on mobile */
-    }
-
-    /* Solution Box */
-    .solution-box { 
-        padding: 24px 20px; 
-        flex-direction: column; 
-        gap: 24px;
-    }
-    .solution-text h2 { 
-        font-size: 1.5rem; 
-    }
-
-    /* ============================================ */
-    /* TIMELINE - COMPLETELY FIXED FOR MOBILE       */
-    /* ============================================ */
-    .timeline {
-        margin-top: 30px;
-        padding-left: 0;
-        padding-right: 0;
-    }
-    
-    /* Move line to left */
-    .timeline::before,
-    .timeline-progress {
-        left: 20px;
-        transform: none; /* Remove translateX(-50%) */
-    }
-    
-    /* ALL timeline items - single column left */
-    .timeline-item,
-    .timeline-item:nth-child(odd),
-    .timeline-item:nth-child(even) {
-        width: 100%;
-        left: 0;
-        padding-left: 52px; /* Space for dot + gap */
-        padding-right: 0;
-        text-align: left;
-        padding-bottom: 35px;
-        transform: translateX(20px);
-    }
-    
-    .timeline-item.active,
-    .timeline-item:nth-child(odd).active,
-    .timeline-item:nth-child(even).active {
-        transform: translateX(0);
-    }
-    
-    /* ALL dots - positioned on the left line */
-    .timeline-item:nth-child(odd) .timeline-dot,
-    .timeline-item:nth-child(even) .timeline-dot {
-        left: 9px; /* 20px(line) - 11px(half of 22px visible dot) */
-        right: auto;
-    }
-    
-    /* Journey Card adjustments */
-    .journey-card { 
-        padding: 18px; 
-    }
-    .journey-card:hover { 
-        transform: none; /* Disable hover on mobile */
-    }
-    
-    /* Image Grids - Single column */
-    .grid-2, .grid-3 { 
-        grid-template-columns: 1fr; 
-    }
-    .journey-img:hover { 
-        transform: none; /* Disable zoom hover on mobile */
-    }
-
-    /* ============================================ */
-    /* SUPER WOW SECTION - FIXED                    */
-    /* ============================================ */
-    .super-wow-section {
-        overflow: hidden; /* ADDED: Contain floating elements */
-    }
-    
-    /* Hide floating RM on mobile - they cause overflow */
-    .floating-rm {
-        display: none;
-    }
-    
-    .super-visual-wrapper { 
-        padding: 0; 
-    }
-    
-    .super-badge {
-        font-size: 0.75rem;
-        padding: 6px 16px;
-        margin-bottom: 20px;
-    }
-    
-    .super-visual-wrapper h2 { 
-        font-size: 1.8rem; 
-    }
-    
-    .visual-card { 
-        padding: 10px; 
-        border-radius: 16px;
-    }
-    .visual-card:hover { 
-        transform: none; /* Disable hover on mobile */
-    }
-    
-    .profit-number-display { 
-        font-size: 3rem !important; 
-    }
-    
-    .profit-source-text { 
-        font-size: 0.8rem; 
-    }
-
-    /* ============================================ */
-    /* COMPARISON - FIXED                           */
-    /* ============================================ */
-    .comparison-wrapper { 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 20px;
-        margin-top: 30px;
-    }
-    .comp-box { 
-        max-width: 100%; 
-        padding: 24px;
-    }
-    .comp-box:hover { 
-        transform: none; /* Disable hover on mobile */
-    }
-    .comp-box.highlight { 
-        transform: none !important; /* Override scale on mobile */
-        border-width: 2px;
-    }
-    .comp-tag { 
-        font-size: 0.65rem; 
-    }
-
-    /* ============================================ */
-    /* OFFER STACK - FIXED                          */
-    /* ============================================ */
-    .stack-card {
-        border-radius: 20px;
-    }
-    .stack-header { 
-        padding: 24px 20px; 
-        font-size: 1.1rem; 
-    }
-    .stack-body { 
-        padding: 24px 20px; 
-    }
-    .stack-item { 
-        margin-bottom: 16px; 
-        padding-bottom: 16px;
-        font-size: 0.9rem;
-    }
-    .final-price { 
-        font-size: 2.8rem; 
-    }
-    .time-box { 
-        min-width: 45px; 
-        padding: 6px 8px; 
-        font-size: 1.3rem; 
-    }
-    .countdown-container { 
-        gap: 8px; 
-    }
-
-    /* FAQ */
-    .faq-item summary { 
-        font-size: 0.9rem; 
-        padding: 16px;
-    }
-    .faq-item p { 
-        font-size: 0.85rem; 
-        padding: 0 16px 16px;
-    }
-
-    /* Footer */
-    footer { 
-        padding: 40px 0 90px; 
-        margin-top: 60px;
-    }
-}
-
-@media(max-width: 480px) {
-    /* Extra Small Fixes */
-    .hero { 
-        padding-top: 100px; 
-    }
-    .hero h1 { 
-        font-size: 1.7rem; 
-    }
-    
-    /* Full width buttons on small screens */
-    .btn { 
-        width: 100%; 
-        padding: 14px 20px;
-        font-size: 0.9rem;
-    }
-    /* Except in hero - keep centered */
-    .hero .btn { 
-        width: auto; 
-        min-width: 220px;
-    }
-    /* Header button stays inline */
-    header .btn {
-        width: auto;
-        min-width: auto;
-    }
-    
-    .profit-number-display { 
-        font-size: 2.5rem !important; 
-    }
-    
-    .final-price { 
-        font-size: 2.4rem; 
-    }
-    
-    .time-box { 
-        min-width: 40px; 
-        font-size: 1.1rem; 
-        padding: 5px 6px;
-    }
-    
-    .super-badge {
-        font-size: 0.7rem;
-        padding: 5px 12px;
-    }
-    
-    .journey-card { 
-        padding: 16px; 
-    }
-    
-    .stack-header { 
-        font-size: 1rem; 
-    }
-}
-
-/* --- LIGHTBOX STYLES --- */
-.lightbox {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    z-index: 9999;
-    display: none; 
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(5px);
-}
-.lightbox.active {
-    display: flex;
-    opacity: 1;
-}
-.lightbox-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px; /* ADDED: padding so image doesn't touch edges */
-}
-.lightbox-img {
-    max-width: 100%;
-    max-height: 90vh;
-    border-radius: 4px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.8);
-    object-fit: contain;
-}
-.lightbox-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 10000;
-    transition: 0.2s;
-    background: rgba(0,0,0,0.5);
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    line-height: 45px;
-    text-align: center;
-}
-.lightbox-close:hover { color: var(--danger); transform: scale(1.1); }
 
 /* --- SUPER WOW REVIEW SECTION STYLES --- */
 .super-wow-section {
@@ -778,7 +479,7 @@ header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
 .final-price { font-size: 3rem; font-weight: 800; color: white; line-height: 1; margin-bottom: 5px; background: linear-gradient(to bottom, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
 .countdown-container {
-    display: flex; justify-content: center; gap: 10px; margin: 15px 0 25px;
+    display: flex; justify-content: center; gap: 10px; margin: 15px 0 10px;
 }
 .time-box {
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
@@ -787,6 +488,135 @@ header.scrolled { padding: 15px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     line-height: 1;
 }
 .time-label { font-size: 0.7rem; color: #666; display: block; font-weight: 400; text-transform: uppercase; margin-top: 4px; }
+
+/* --- SLOT PROGRESS BAR --- */
+.slot-bar {
+    margin: 18px auto 20px;
+    max-width: 320px;
+}
+.slot-bar-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.slot-bar-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+.slot-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--warning), var(--danger));
+    transition: width 1.5s ease-out;
+    position: relative;
+}
+.slot-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0;
+    width: 20px; height: 100%;
+    background: rgba(255,255,255,0.4);
+    border-radius: 10px;
+    animation: bar-shimmer 2s infinite;
+}
+@keyframes bar-shimmer {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+.slot-bar-text {
+    font-size: 0.8rem;
+    color: #fbbf24;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.slot-bar-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+/* --- OFFER URGENCY BADGE --- */
+.offer-urgency-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 8px 18px;
+    border-radius: 10px;
+    margin: 15px 0 10px;
+}
+
+/* --- NEXT PRICE ANCHOR --- */
+.next-price-anchor {
+    margin-top: 10px;
+    margin-bottom: 22px;
+    font-size: 0.82rem;
+    color: #6b7280;
+}
+.next-price-anchor strong {
+    color: #9ca3af;
+    font-weight: 600;
+}
+
+/* --- SOCIAL PROOF TOAST --- */
+.social-proof-toast {
+    position: fixed;
+    top: 100px;
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    background: rgba(24, 27, 33, 0.95);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 998;
+    transform: translateX(calc(100% + 30px));
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    backdrop-filter: blur(12px);
+    max-width: 240px;
+    font-size: 0.82rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.social-proof-toast.show {
+    transform: translateX(0);
+}
+.social-proof-toast .toast-icon {
+    width: 32px; height: 32px;
+    background: rgba(52, 211, 153, 0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.social-proof-toast .toast-icon i {
+    color: var(--accent);
+    font-size: 0.85rem;
+}
+.social-proof-toast strong {
+    color: white;
+    font-weight: 600;
+}
+.social-proof-toast .toast-time {
+    color: #6b7280;
+    font-size: 0.72rem;
+    margin-top: 2px;
+}
+.social-proof-toast.hiding {
+    transform: translateX(calc(100% + 30px));
+}
 
 /* --- FAQ --- */
 .faq-item { background: var(--bg-card); margin-bottom: 15px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
@@ -814,13 +644,439 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
 }
 .sticky-cta.show { transform: translateY(0); }
 .sticky-cta .btn { width: 100%; padding: 14px; font-size: 1rem; }
+.sticky-cta-urgency {
+    text-align: center;
+    font-size: 0.72rem;
+    color: #fbbf24;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+/* --- LIGHTBOX STYLES --- */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+.lightbox.active {
+    display: flex;
+    opacity: 1;
+}
+.lightbox-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.lightbox-img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    object-fit: contain;
+}
+.lightbox-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10000;
+    transition: 0.2s;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    text-align: center;
+}
+.lightbox-close:hover { color: var(--danger); transform: scale(1.1); }
 
 /* --- CONFETTI CANVAS --- */
 #confetti-canvas {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 9999;
 }
-</style>
+
+/* ============================================ */
+/* MOBILE RESPONSIVE - COMPLETE                 */
+/* ============================================ */
+@media(max-width: 768px) {
+    
+    /* Container */
+    .container { 
+        padding: 0 16px; 
+    }
+
+    /* Background orbs - reduce size on mobile */
+    .orb-1 { width: 200px; height: 200px; }
+    .orb-2 { width: 250px; height: 250px; }
+
+    /* Announcement bar */
+    .announce-bar { font-size: 0.7rem; padding: 6px 0; }
+    body.has-announce header { top: 28px; }
+    body.has-announce .hero { padding-top: 148px; }
+
+    /* Header button */
+    .nav-content .btn {
+        padding: 8px 14px !important;
+        font-size: 0.7rem !important;
+        letter-spacing: 0;
+    }
+    .nav-content .btn .btn-icon { 
+        margin-right: 4px; 
+        font-size: 0.7rem;
+    }
+
+    /* Hero */
+    .hero { 
+        padding: 120px 0 60px; 
+    }
+    body.has-announce .hero { 
+        padding-top: 148px; 
+    }
+    .hero h1 { 
+        font-size: 1.9rem; 
+        letter-spacing: -0.5px;
+    }
+    .hero p { 
+        font-size: 1rem; 
+    }
+
+    /* Sections */
+    .section { 
+        padding: 50px 0; 
+    }
+
+    /* Pain Grid - Force single column */
+    .pain-grid { 
+        grid-template-columns: 1fr; 
+        gap: 16px;
+        margin-top: 30px;
+    }
+    .pain-card { 
+        padding: 24px; 
+    }
+    .pain-card:hover { 
+        transform: none; 
+    }
+
+    /* Solution Box */
+    .solution-box { 
+        padding: 24px 20px; 
+        flex-direction: column; 
+        gap: 24px;
+    }
+    .solution-text h2 { 
+        font-size: 1.5rem; 
+    }
+
+    /* ============================================ */
+    /* TIMELINE - COMPLETELY FIXED FOR MOBILE       */
+    /* ============================================ */
+    .timeline {
+        margin-top: 30px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    /* Move line to left */
+    .timeline::before,
+    .timeline-progress {
+        left: 20px;
+        transform: none; 
+    }
+    
+    /* ALL timeline items - single column left */
+    .timeline-item,
+    .timeline-item:nth-child(odd),
+    .timeline-item:nth-child(even) {
+        width: 100%;
+        left: 0;
+        padding-left: 52px; 
+        padding-right: 0;
+        text-align: left;
+        padding-bottom: 35px;
+        transform: translateX(20px);
+    }
+    
+    .timeline-item.active,
+    .timeline-item:nth-child(odd).active,
+    .timeline-item:nth-child(even).active {
+        transform: translateX(0);
+    }
+    
+    /* ALL dots - positioned on the left line */
+    .timeline-item:nth-child(odd) .timeline-dot,
+    .timeline-item:nth-child(even) .timeline-dot {
+        left: 9px; 
+        right: auto;
+    }
+    
+    /* Journey Card adjustments */
+    .journey-card { 
+        padding: 18px; 
+    }
+    .journey-card:hover { 
+        transform: none; 
+    }
+    
+    /* Image Grids - Single column */
+    .grid-2, .grid-3 { 
+        grid-template-columns: 1fr; 
+    }
+    .journey-img:hover { 
+        transform: none; 
+    }
+
+    /* ============================================ */
+    /* SUPER WOW SECTION - FIXED                    */
+    /* ============================================ */
+    .super-wow-section {
+        overflow: hidden; 
+    }
+    
+    /* Hide floating RM on mobile */
+    .floating-rm {
+        display: none;
+    }
+    
+    .super-visual-wrapper { 
+        padding: 0; 
+    }
+    
+    .super-badge {
+        font-size: 0.75rem;
+        padding: 6px 16px;
+        margin-bottom: 20px;
+    }
+    
+    .super-visual-wrapper h2 { 
+        font-size: 1.8rem; 
+    }
+    
+    .visual-card { 
+        padding: 10px; 
+        border-radius: 16px;
+    }
+    .visual-card:hover { 
+        transform: none; 
+    }
+    
+    .profit-number-display { 
+        font-size: 3rem !important; 
+    }
+    
+    .profit-source-text { 
+        font-size: 0.8rem; 
+    }
+
+    /* ============================================ */
+    /* COMPARISON - FIXED                           */
+    /* ============================================ */
+    .comparison-wrapper { 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 20px;
+        margin-top: 30px;
+    }
+    .comp-box { 
+        max-width: 100%; 
+        padding: 24px;
+    }
+    .comp-box:hover { 
+        transform: none; 
+    }
+    .comp-box.highlight { 
+        transform: none !important; 
+        border-width: 2px;
+    }
+    .comp-tag { 
+        font-size: 0.65rem; 
+    }
+
+    /* ============================================ */
+    /* OFFER STACK - FIXED                          */
+    /* ============================================ */
+    .stack-card {
+        border-radius: 20px;
+    }
+    .stack-header { 
+        padding: 24px 20px; 
+        font-size: 1.1rem; 
+    }
+    .stack-body { 
+        padding: 24px 16px; 
+    }
+    .stack-item { 
+        margin-bottom: 16px; 
+        padding-bottom: 16px;
+        font-size: 0.9rem;
+    }
+    .final-price { 
+        font-size: 2.8rem; 
+    }
+    .time-box { 
+        min-width: 45px; 
+        padding: 6px 8px; 
+        font-size: 1.3rem; 
+    }
+    .countdown-container { 
+        gap: 8px; 
+    }
+
+    /* Slot bar mobile - ensure visible */
+    .slot-bar { 
+        margin: 18px 0 20px; 
+        max-width: 100%; 
+    }
+    .slot-bar-inner { 
+        flex-direction: column; 
+        gap: 8px; 
+    }
+    .slot-bar-track { 
+        width: 100%; 
+    }
+    .slot-bar-text { 
+        text-align: center; 
+    }
+
+    /* Offer urgency badge mobile - ensure wrapping */
+    .offer-urgency-badge {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 4px;
+        font-size: 0.8rem;
+        padding: 10px 14px;
+        margin: 15px 0 10px;
+        line-height: 1.5;
+    }
+    .offer-urgency-badge i { 
+        flex-shrink: 0; 
+    }
+
+    /* Next price anchor mobile */
+    .next-price-anchor {
+        font-size: 0.8rem;
+        margin-top: 8px;
+        margin-bottom: 22px;
+        line-height: 1.5;
+    }
+
+    /* FAQ */
+    .faq-item summary { 
+        font-size: 0.9rem; 
+        padding: 16px;
+    }
+    .faq-item p { 
+        font-size: 0.85rem; 
+        padding: 0 16px 16px;
+    }
+
+    /* Footer */
+    footer { 
+        padding: 40px 0 90px; 
+        margin-top: 60px;
+    }
+
+    /* Social proof toast - top right on mobile too */
+    .social-proof-toast {
+        top: 80px;
+        right: 10px;
+        left: auto;
+        bottom: auto;
+        max-width: 220px;
+        font-size: 0.78rem;
+        padding: 10px 12px;
+    }
+}
+
+@media(max-width: 480px) {
+    /* Extra Small Fixes */
+    .hero { 
+        padding-top: 100px; 
+    }
+    body.has-announce .hero { 
+        padding-top: 128px; 
+    }
+    .hero h1 { 
+        font-size: 1.7rem; 
+    }
+    
+    /* Full width buttons on small screens */
+    .btn { 
+        width: 100%; 
+        padding: 14px 20px;
+        font-size: 0.9rem;
+    }
+    /* Except in hero - keep centered */
+    .hero .btn { 
+        width: auto; 
+        min-width: 220px;
+    }
+    /* Header button stays inline */
+    header .btn {
+        width: auto;
+        min-width: auto;
+    }
+    
+    .profit-number-display { 
+        font-size: 2.5rem !important; 
+    }
+    
+    .final-price { 
+        font-size: 2.4rem; 
+    }
+    
+    .time-box { 
+        min-width: 40px; 
+        font-size: 1.1rem; 
+        padding: 5px 6px;
+    }
+    
+    .super-badge {
+        font-size: 0.7rem;
+        padding: 5px 12px;
+    }
+    
+    .journey-card { 
+        padding: 16px; 
+    }
+    
+    .stack-header { 
+        font-size: 1rem; 
+    }
+    
+    .batch-badge {
+        font-size: 0.75rem;
+        padding: 8px 14px;
+        flex-direction: column;
+        text-align: center;
+        gap: 6px;
+    }
+
+    .social-proof-toast {
+        max-width: 190px;
+        font-size: 0.75rem;
+        padding: 8px 10px;
+    }
+}
+    </style>
 </head>
 <body>
 
@@ -831,11 +1087,16 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
+    <!-- Announcement Bar -->
+    <div class="announce-bar" id="announce-bar">
+        <span class="pulse-dot"></span>
+        Batch 2 dibuka — Harga promosi <strong>RM35.90</strong> tamat malam ini &nbsp;|&nbsp; Kuota terhad
+    </div>
+
     <!-- Header -->
     <header id="main-header">
         <div class="container nav-content">
             <a href="#" class="logo"><i class="fas fa-rocket" style="color:var(--primary);"></i> ARANIS<span>ECOM</span></a>
-            <!-- Updated Link to checkout -->
             <a href="#offer" class="btn btn-primary">Dapatkan Prompt</a>
         </div>
     </header>
@@ -848,10 +1109,15 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
             <p class="fade-up">Sakit kepala tengok CPA naik? Relax. Kami ada "Prompt Ajaib" yang boleh jadikan ChatGPT macam Senior Meta ADS ANALYST korang. Senang, cepat, dan tak perlu bayar mahal.</p>
             
             <div class="fade-up" style="margin-top: 30px;">
-                <!-- Updated Link to checkout -->
                 <a href="#offer" class="btn btn-primary cta-trigger"><i class="fas fa-sparkles btn-icon"></i> Jom Cuba Sekarang</a>
                 <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fas fa-check-circle" style="color: var(--accent);"></i> Harga sekali bayar je. Tiada subscription.
+                </div>
+
+                <!-- Batch Urgency Badge -->
+                <div class="batch-badge fade-up">
+                    <i class="fas fa-users"></i>
+                    <span><strong>Batch 2</strong> — Harga promosi untuk 50 user awal sahaja</span>
                 </div>
             </div>
         </div>
@@ -935,7 +1201,6 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
             <div class="visual-card fade-up" style="margin-top: 40px;">
                 <!-- IMAGE FRAME -->
                 <div class="img-frame">
-                    <!-- Using a placeholder that looks like a dashboard/report -->
                     <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.1/reveal.webp" alt="Ads Manager Profit Screenshot" class="wow-img zoomable-img">
                 </div>
 
@@ -953,7 +1218,6 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
             </div>
             
             <div class="text-center" style="margin-top: 30px;">
-                 <!-- Updated Link to checkout -->
                  <a href="#offer" class="btn btn-primary cta-trigger" style="font-size: 1.1rem;">
                     <i class="fas fa-rocket btn-icon"></i> Saya Nak Profit Macam Ni!
                 </a>
@@ -992,8 +1256,7 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
                         <div class="day-badge">Day 1</div>
                         <div class="ai-badge"><i class="fas fa-robot"></i> AI Cadangan: Launch & Test</div>
                         <h4>Analysis Hari Pertama</h4>
-                        <p style="font-size: 0.9rem; color: #9ca3af;">
-                            AI berikan kami Benchmark berdasarkan data HARI PERTAMA, Nilai CPA,CTR.Budget RM100 kami dapat 13 sales. RM7.70 SAHAJA/per Conversion!</p>
+                        <p style="font-size: 0.9rem; color: #9ca3af;">AI berikan kami Benchmark berdasarkan data HARI PERTAMA, Nilai CPA,CTR.Budget RM100 kami dapat 13 sales. RM7.70 SAHAJA/per Conversion!</p>
                         <div class="img-grid grid-1">
                             <img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day1-1.webp" class="journey-img zoomable-img" alt="Day 1 Screenshot">
                         </div>
@@ -1232,13 +1495,33 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
                         <div class="final-price">RM35.90 </div>
                         
                         <!-- Countdown Timer -->
-                        <div style="margin-top:10px; font-size: 0.9rem; color: #888;">Harga Tamat Dalam:</div>
+                        <div style="margin-top:10px; font-size: 0.9rem; color: #888;">Harga batch ini tamat malam ini:</div>
                         <div class="countdown-container" id="countdown">
                             <div class="time-box"><span id="mins">00</span><span class="time-label">Minit</span></div>
                             <div class="time-box"><span id="secs">00</span><span class="time-label">Saat</span></div>
                         </div>
 
-                        <div style="color: var(--accent); font-weight: 700; font-size: 0.9rem; margin: 15px 0 25px; background: rgba(52,211,153,0.1); display: inline-block; padding: 5px 15px; border-radius: 10px;">TERHAD UNTUK 15 USER TERAWAL</div>
+                        <!-- Slot Progress Bar -->
+                        <div class="slot-bar" id="slot-bar">
+                            <div class="slot-bar-label">Pengguna untuk batch kedua :</div>
+                            <div class="slot-bar-inner">
+                                <div class="slot-bar-track">
+                                    <div class="slot-bar-fill" id="slot-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="slot-bar-text" id="slot-text">0/50</div>
+                            </div>
+                        </div>
+
+                        <!-- Urgency Badge -->
+                        <div class="offer-urgency-badge">
+                            <i class="fas fa-clock"></i>
+                            <span>Batch 2 — Harga akan kembali ke <strong style="color:#fff;">RM97</strong> selepas slot habis</span>
+                        </div>
+                        
+                        <!-- Next Price Anchor -->
+                        <div class="next-price-anchor">
+                            Harga selepas batch ini: <strong>RM97</strong> (masih jauh lebih murah dari nilai sebenar)
+                        </div>
                         
                         <!-- Updated Link to checkout -->
                         <a href="checkout.html" class="btn btn-primary cta-trigger" style="width: 100%; padding: 16px 0; font-size: 1.1rem;">Nak Satu Sekarang!</a>
@@ -1309,7 +1592,19 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
     <!-- Sticky CTA (Mobile) -->
     <div class="sticky-cta" id="sticky-cta">
         <!-- Updated Link to checkout -->
+        <div class="sticky-cta-urgency">
+            <i class="fas fa-fire" style="color: var(--danger);"></i> Batch 2 — Slot terhad, tamat malam ini
+        </div>
         <a href="#offer" class="btn btn-primary cta-trigger"><i class="fas fa-shopping-cart btn-icon"></i> Beli Sekarang - RM35.90</a>
+    </div>
+
+    <!-- Social Proof Toast - Top Right -->
+    <div class="social-proof-toast" id="social-toast">
+        <div class="toast-icon"><i class="fas fa-check"></i></div>
+        <div>
+            <div><strong id="toast-name">Ahmad Daniel</strong></div>
+            <div class="toast-time" id="toast-time">telah beli</div>
+        </div>
     </div>
 
     <!-- Script -->
@@ -1439,23 +1734,78 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
                 if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
             });
 
-            // 6. Countdown Timer (Fake Urgency Loop)
-            let totalSeconds = 900; // 15 mins loop
+            // 6. Midnight MYT Countdown Timer
             const minsEl = document.getElementById('mins');
             const secsEl = document.getElementById('secs');
 
-            setInterval(() => {
-                totalSeconds--;
-                if (totalSeconds < 0) totalSeconds = 900; // Reset loop
+            function getTimeUntilMidnightMYT() {
+                const now = new Date();
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const myt = new Date(utc + (8 * 3600000)); // UTC+8
                 
-                const m = Math.floor(totalSeconds / 60);
-                const s = totalSeconds % 60;
+                const midnight = new Date(myt);
+                midnight.setHours(24, 0, 0, 0);
                 
-                minsEl.textContent = m.toString().padStart(2, '0');
-                secsEl.textContent = s.toString().padStart(2, '0');
-            }, 1000);
+                const diff = midnight - myt;
+                const m = Math.floor(diff / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                
+                return { m, s };
+            }
 
-            // 7. Number Counter Animation
+            function updateCountdown() {
+                const t = getTimeUntilMidnightMYT();
+                minsEl.textContent = t.m.toString().padStart(2, '0');
+                secsEl.textContent = t.s.toString().padStart(2, '0');
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // 7. Slot Progress Bar — observe the bar element directly
+            const SLOT_TOTAL = 50;
+            const SLOT_FILLED = 43;
+            let slotAnimated = false;
+
+            function animateSlotBar() {
+                if (slotAnimated) return;
+                slotAnimated = true;
+                
+                const fill = document.getElementById('slot-fill');
+                const text = document.getElementById('slot-text');
+                const pct = (SLOT_FILLED / SLOT_TOTAL) * 100;
+                
+                // Animate fill width
+                setTimeout(() => {
+                    fill.style.width = pct + '%';
+                }, 300);
+                
+                // Animate number counting up
+                let current = 0;
+                const increment = SLOT_FILLED / 40;
+                const counter = setInterval(() => {
+                    current += increment;
+                    if (current >= SLOT_FILLED) {
+                        current = SLOT_FILLED;
+                        clearInterval(counter);
+                    }
+                    text.textContent = Math.round(current) + '/' + SLOT_TOTAL;
+                }, 40);
+            }
+
+            // Observe slot bar directly — fires when bar itself scrolls into view
+            const slotBarEl = document.getElementById('slot-bar');
+            if (slotBarEl) {
+                const slotObserver = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        animateSlotBar();
+                        slotObserver.unobserve(slotBarEl);
+                    }
+                }, { threshold: 0.3 });
+                slotObserver.observe(slotBarEl);
+            }
+
+            // 8. Number Counter Animation
             function startCounters(section) {
                 const counters = section.querySelectorAll('.count-up');
                 if(counters.length === 0) return;
@@ -1483,7 +1833,61 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
                 });
             }
 
-            // 8. Confetti Effect (Simple Canvas Implementation)
+            // 9. Social Proof Toast Notifications — Top Right
+            const buyers = [
+                { name: "Ahmad Daniel",     time: "telah beli sebentar tadi" },
+                { name: "Nurul Aisyah",     time: "telah beli 1 jam yang lalu" },
+                { name: "Muhammad Afiq",    time: "sedang buat pembayaran" },
+                { name: "Sarah Amira",      time: "telah beli 2 jam yang lalu" },
+                { name: "Farah Hannah",     time: "telah beli sebentar tadi" },
+                { name: "Hafiz Iskandar",   time: "telah beli 1 hari yang lalu" },
+                { name: "Siti Nurhaliza",   time: "telah beli 3 jam yang lalu" },
+                { name: "Amir Syahmi",      time: "sedang buat pembayaran" },
+                { name: "Nabila Hani",      time: "telah beli sebentar tadi" },
+                { name: "Danial Harith",    time: "telah beli 2 jam yang lalu" },
+                { name: "Izzah Athirah",    time: "telah beli 1 jam yang lalu" },
+                { name: "Adam Rizqi",       time: "sedang buat pembayaran" },
+                { name: "Aina Safiya",      time: "telah beli sebentar tadi" },
+                { name: "Rizal Ameer",      time: "telah beli 4 jam yang lalu" },
+                { name: "Puteri Qistina",   time: "telah beli 1 hari yang lalu" }
+            ];
+
+            const toast = document.getElementById('social-toast');
+            const toastName = document.getElementById('toast-name');
+            const toastTime = document.getElementById('toast-time');
+            let lastToastIndex = -1;
+
+            function showSocialProofToast() {
+                // Pick random buyer (avoid same as last)
+                let idx;
+                do {
+                    idx = Math.floor(Math.random() * buyers.length);
+                } while (idx === lastToastIndex && buyers.length > 1);
+                lastToastIndex = idx;
+
+                const buyer = buyers[idx];
+                toastName.textContent = buyer.name;
+                toastTime.textContent = buyer.time;
+
+                toast.classList.remove('hiding');
+                toast.classList.add('show');
+
+                // Hide after 4 seconds
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    toast.classList.add('hiding');
+                }, 4000);
+            }
+
+            // First toast after 8 seconds, then every 25-45 seconds
+            setTimeout(() => {
+                showSocialProofToast();
+                setInterval(() => {
+                    showSocialProofToast();
+                }, Math.random() * 20000 + 25000); // 25-45s
+            }, 8000);
+
+            // 10. Confetti Effect (Simple Canvas Implementation)
             const canvas = document.getElementById('confetti-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
@@ -1534,7 +1938,7 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
             updateParticles();
 
             // ============================================================
-            // 9. META PIXEL: ViewContent
+            // 11. META PIXEL: ViewContent
             // ============================================================
             try {
                 if (typeof fbq !== 'undefined') {
@@ -1550,7 +1954,7 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
             } catch (e) { console.log('[Pixel] ViewContent error:', e); }
 
             // ============================================================
-            // 10. META PIXEL: Lead (bila klik mana-mana link ke checkout)
+            // 12. META PIXEL: Lead (bila klik mana-mana link ke checkout)
             // ============================================================
             document.querySelectorAll('a[href*="checkout.html"]').forEach(function(link) {
                 link.addEventListener('click', function () {

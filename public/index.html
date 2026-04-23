@@ -485,9 +485,21 @@ body.has-announce .hero { padding-top: 173px; }
     background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
     padding: 8px 12px; border-radius: 8px; font-family: monospace; font-weight: 700;
     color: var(--danger); font-size: 1.5rem; min-width: 50px; text-align: center;
-    line-height: 1;
+    line-height: 1; position: relative;
 }
 .time-label { font-size: 0.7rem; color: #666; display: block; font-weight: 400; text-transform: uppercase; margin-top: 4px; }
+
+/* Countdown colon separator */
+.time-box + .time-box::before {
+    content: ':';
+    position: absolute;
+    left: -7px;
+    top: 6px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.2);
+    font-family: monospace;
+}
 
 /* --- SLOT PROGRESS BAR --- */
 .slot-bar {
@@ -930,10 +942,17 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
     .final-price { 
         font-size: 2.8rem; 
     }
+    
+    /* Countdown Timer Mobile */
     .time-box { 
-        min-width: 45px; 
-        padding: 6px 8px; 
-        font-size: 1.3rem; 
+        min-width: 42px; 
+        padding: 6px 6px; 
+        font-size: 1.2rem; 
+    }
+    .time-box + .time-box::before {
+        font-size: 1.2rem;
+        left: -5px;
+        top: 4px;
     }
     .countdown-container { 
         gap: 8px; 
@@ -1043,10 +1062,19 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
         font-size: 2.4rem; 
     }
     
+    /* Countdown Timer Extra Small */
     .time-box { 
-        min-width: 40px; 
-        font-size: 1.1rem; 
-        padding: 5px 6px;
+        min-width: 36px; 
+        font-size: 1rem; 
+        padding: 5px 4px;
+    }
+    .time-box + .time-box::before {
+        font-size: 1rem;
+        left: -4px;
+        top: 3px;
+    }
+    .time-label { 
+        font-size: 0.6rem; 
     }
     
     .super-badge {
@@ -1078,7 +1106,7 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
 }
     </style>
 </head>
-<body>
+<body class="has-announce">
 
     <!-- Confetti Canvas -->
     <canvas id="confetti-canvas"></canvas>
@@ -1497,6 +1525,8 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
                         <!-- Countdown Timer -->
                         <div style="margin-top:10px; font-size: 0.9rem; color: #888;">Harga batch ini tamat malam ini:</div>
                         <div class="countdown-container" id="countdown">
+                            <div class="time-box"><span id="days">00</span><span class="time-label">Hari</span></div>
+                            <div class="time-box"><span id="hours">00</span><span class="time-label">Jam</span></div>
                             <div class="time-box"><span id="mins">00</span><span class="time-label">Minit</span></div>
                             <div class="time-box"><span id="secs">00</span><span class="time-label">Saat</span></div>
                         </div>
@@ -1734,29 +1764,44 @@ footer { background: #000; padding: 60px 0 100px; text-align: center; color: var
                 if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
             });
 
-            // 6. Midnight MYT Countdown Timer
+            // 6. Midnight MYT Countdown Timer (Constant Daily Reset)
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
             const minsEl = document.getElementById('mins');
             const secsEl = document.getElementById('secs');
 
             function getTimeUntilMidnightMYT() {
                 const now = new Date();
+                // Convert current local time to UTC
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-                const myt = new Date(utc + (8 * 3600000)); // UTC+8
+                // Convert UTC to Malaysia Time (UTC+8)
+                const mytNow = new Date(utc + (8 * 3600000));
                 
-                const midnight = new Date(myt);
-                midnight.setHours(24, 0, 0, 0);
+                // Set the target to the NEXT midnight in MYT
+                const mytMidnight = new Date(mytNow);
+                mytMidnight.setHours(24, 0, 0, 0); // Rolls over to next day's 00:00:00
                 
-                const diff = midnight - myt;
-                const m = Math.floor(diff / 60000);
-                const s = Math.floor((diff % 60000) / 1000);
+                // Calculate difference
+                const diff = mytMidnight - mytNow;
+
+                if (diff <= 0) {
+                    return { days: 0, hours: 0, mins: 0, secs: 0 };
+                }
+
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
                 
-                return { m, s };
+                return { days: d, hours: h, mins: m, secs: s };
             }
 
             function updateCountdown() {
                 const t = getTimeUntilMidnightMYT();
-                minsEl.textContent = t.m.toString().padStart(2, '0');
-                secsEl.textContent = t.s.toString().padStart(2, '0');
+                daysEl.textContent = t.days.toString().padStart(2, '0');
+                hoursEl.textContent = t.hours.toString().padStart(2, '0');
+                minsEl.textContent = t.mins.toString().padStart(2, '0');
+                secsEl.textContent = t.secs.toString().padStart(2, '0');
             }
 
             updateCountdown();

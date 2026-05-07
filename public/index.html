@@ -128,6 +128,323 @@
     .pain-icon { font-size: 1.8rem; background: rgba(239, 68, 68, 0.1); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: #f87171; margin-bottom: 15px; }
     .pain-card h3 { font-size: 1.2rem; margin-bottom: 10px; }
 
+    /* ========================================
+       CALCULATOR — PROFESSIONAL REDESIGN
+       ======================================== */
+    .calc-section {
+        padding: 20px 0 60px;
+        position: relative;
+    }
+    .calc-card {
+        max-width: 700px;
+        margin: 28px auto 0;
+        background: var(--bg-card);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 24px;
+        padding: 36px 32px;
+        position: relative;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+    .calc-header {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+    .calc-badge {
+        display: inline-block;
+        background: rgba(52, 211, 153, 0.08);
+        color: var(--accent);
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 14px;
+        border: 1px solid rgba(52, 211, 153, 0.15);
+        letter-spacing: 0.3px;
+    }
+    .calc-header h2 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+    .calc-gradient-text {
+        background: linear-gradient(90deg, #34d399, #60a5fa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .calc-header p {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+    }
+
+    .calc-inputs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 22px;
+    }
+    .calc-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .calc-input-group label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .calc-input-group input {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px;
+        padding: 14px 16px;
+        color: white;
+        font-size: 1.05rem;
+        font-weight: 700;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        outline: none;
+        transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+        -moz-appearance: textfield;
+        width: 100%;
+    }
+    .calc-input-group input::-webkit-inner-spin-button,
+    .calc-input-group input::-webkit-outer-spin-button {
+        -webkit-appearance: none; margin: 0;
+    }
+    .calc-input-group input::placeholder {
+        color: #4b5563; font-weight: 500;
+    }
+    .calc-input-group input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.12);
+        background: rgba(255,255,255,0.04);
+    }
+    .calc-input-group input.input-error {
+        border-color: var(--danger);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        animation: input-shake 0.4s ease;
+    }
+    @keyframes input-shake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-6px); }
+        40% { transform: translateX(6px); }
+        60% { transform: translateX(-4px); }
+        80% { transform: translateX(4px); }
+    }
+    .calc-input-hint {
+        font-size: 0.72rem;
+        color: var(--danger);
+        min-height: 16px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .calc-input-hint.visible { opacity: 1; }
+
+    .calc-btn-wrap {
+        text-align: center;
+        margin-bottom: 4px;
+    }
+    .calc-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px 36px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.92rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+        cursor: pointer;
+        background: var(--gradient-bg);
+        color: white;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25);
+        position: relative;
+        overflow: hidden;
+        white-space: nowrap;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        width: 100%;
+        max-width: 380px;
+    }
+    .calc-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px var(--primary-glow);
+    }
+    .calc-btn:active { transform: translateY(-1px); }
+    .calc-btn.loading { pointer-events: none; opacity: 0.75; }
+    .calc-btn .spinner {
+        display: none; width: 16px; height: 16px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top-color: white; border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+    }
+    .calc-btn.loading .spinner { display: block; }
+    .calc-btn.loading .btn-label { display: none; }
+    .calc-btn.loading .btn-loading-label { display: inline; }
+    .calc-btn .btn-loading-label { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Result wrapper */
+    .calc-result {
+        display: none; opacity: 0;
+        transform: translateY(12px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .calc-result.show {
+        display: block; opacity: 1; transform: translateY(0);
+    }
+    .calc-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        margin: 26px 0;
+    }
+
+    /* Warning badge */
+    .calc-warning-badge {
+        display: flex; align-items: center; justify-content: center; gap: 6px;
+        background: rgba(239, 68, 68, 0.08);
+        color: #f87171; padding: 8px 16px; border-radius: 10px;
+        font-size: 0.78rem; font-weight: 600; margin-bottom: 18px;
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        width: fit-content; margin-left: auto; margin-right: auto;
+    }
+
+    /* Comparison split */
+    .calc-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+    .calc-side {
+        border-radius: 16px;
+        padding: 22px 18px;
+        text-align: center;
+        transition: transform 0.3s;
+    }
+    .calc-side:hover { transform: translateY(-3px); }
+    .calc-side-current {
+        background: rgba(255,255,255,0.015);
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    .calc-side-ai {
+        background: linear-gradient(180deg, rgba(139,92,246,0.07) 0%, rgba(24,27,33,0.95) 100%);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.06);
+    }
+    .calc-side-label {
+        font-size: 0.72rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1px;
+        margin-bottom: 14px; display: flex;
+        align-items: center; justify-content: center; gap: 6px;
+    }
+    .calc-side-current .calc-side-label { color: #6b7280; }
+    .calc-side-ai .calc-side-label { color: #c4b5fd; }
+    .calc-side-amount {
+        font-size: 1.6rem; font-weight: 800; line-height: 1.1;
+        margin-bottom: 4px;
+    }
+    .calc-side-current .calc-side-amount { color: #9ca3af; }
+    .calc-side-ai .calc-side-amount {
+        color: white;
+    }
+    .calc-side-period {
+        font-size: 0.8rem; font-weight: 500;
+    }
+    .calc-side-current .calc-side-period { color: #6b7280; }
+    .calc-side-ai .calc-side-period { color: #a78bfa; }
+    .calc-side-sub {
+        font-size: 0.72rem; margin-top: 12px;
+        padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .calc-side-current .calc-side-sub { color: #4b5563; }
+    .calc-side-ai .calc-side-sub { color: rgba(196,181,253,0.6); }
+
+    /* Hero extra number */
+    .calc-extra {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    .calc-extra-label {
+        font-size: 0.82rem; color: var(--text-muted);
+        margin-bottom: 10px; font-weight: 500;
+    }
+    .calc-extra-amount {
+        font-size: 3.2rem; font-weight: 800; line-height: 1;
+        margin-bottom: 14px;
+        background: linear-gradient(180deg, #ffffff 0%, #34d399 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.2));
+    }
+    .calc-extra-breakdown {
+        display: flex; align-items: center; justify-content: center;
+        gap: 12px; font-size: 0.85rem; color: var(--text-muted);
+        font-weight: 500;
+    }
+    .calc-breakdown-sep { color: #374151; }
+
+    /* Urgency */
+    .calc-urgency {
+        text-align: center;
+        background: rgba(139, 92, 246, 0.04);
+        border: 1px solid rgba(139, 92, 246, 0.1);
+        border-radius: 14px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+        color: #c4b5fd;
+        line-height: 1.7;
+    }
+    .calc-urgency strong { color: var(--accent); font-weight: 700; }
+
+    /* Positive state */
+    .calc-positive {
+        text-align: center; padding: 30px 20px;
+    }
+    .calc-positive-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .calc-positive h3 {
+        color: var(--accent); font-size: 1.2rem; margin-bottom: 10px;
+    }
+    .calc-positive p {
+        color: var(--text-muted); font-size: 0.9rem;
+        line-height: 1.6; max-width: 400px; margin: 0 auto;
+    }
+
+    /* Reference + Disclaimer */
+    .calc-reference {
+        background: rgba(255,255,255,0.015);
+        border-radius: 12px; padding: 14px 16px;
+        margin-bottom: 10px; font-size: 0.73rem;
+        color: #4b5563; line-height: 1.7;
+    }
+    .calc-reference strong { color: #6b7280; }
+    .calc-disclaimer {
+        font-size: 0.7rem; color: #374151;
+        line-height: 1.7; text-align: center;
+    }
+
+    /* Transition arrow */
+    .calc-transition {
+        text-align: center; margin-top: 28px;
+        color: var(--text-muted); font-size: 0.82rem; font-weight: 500;
+        animation: bounce-down 2s ease-in-out infinite;
+    }
+    .calc-transition i {
+        display: block; margin-top: 6px;
+        font-size: 1.1rem; color: var(--primary);
+    }
+    @keyframes bounce-down {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(5px); }
+    }
+    /* ========================================
+       END CALCULATOR
+       ======================================== */
+
     .solution-box {
         background: linear-gradient(180deg, rgba(31, 41, 55, 0.5) 0%, rgba(59, 130, 246, 0.05) 100%);
         border-radius: var(--radius); padding: 40px 30px; margin-top: 40px;
@@ -251,7 +568,6 @@
     .price-anchor-text strong { color: #9ca3af; }
     .payment-note { font-size: 0.8rem; margin-top: 20px; color: #666; }
 
-    /* --- SOCIAL PROOF TOAST (ENHANCED) --- */
     .social-proof-toast {
         position: fixed; top: 90px; right: 16px; left: auto; bottom: auto;
         background: rgba(24, 27, 33, 0.96); border: 1px solid rgba(52,211,153,0.15);
@@ -309,6 +625,9 @@
     .lightbox-close:hover { color: var(--danger); transform: scale(1.1); }
     #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
+    /* ========================================
+       RESPONSIVE — CALCULATOR
+       ======================================== */
     @media(max-width: 768px) {
         .container { padding: 0 16px; }
         .orb-1 { width: 200px; height: 200px; }
@@ -322,6 +641,24 @@
         .pain-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 30px; }
         .pain-card { padding: 24px; }
         .pain-card:hover { transform: none; }
+
+        .calc-section { padding: 10px 0 40px; }
+        .calc-card { padding: 24px 18px; border-radius: 20px; margin-top: 20px; }
+        .calc-header h2 { font-size: 1.2rem; }
+        .calc-header p { font-size: 0.8rem; }
+        .calc-inputs { grid-template-columns: 1fr; gap: 12px; }
+        .calc-input-group input { padding: 13px 14px; font-size: 1rem; }
+        .calc-btn { padding: 14px 20px; font-size: 0.85rem; }
+        .calc-split { grid-template-columns: 1fr; gap: 10px; }
+        .calc-side { padding: 18px 14px; }
+        .calc-side:hover { transform: none; }
+        .calc-side-amount { font-size: 1.4rem; }
+        .calc-extra-amount { font-size: 2.4rem; }
+        .calc-extra-breakdown { font-size: 0.8rem; gap: 8px; }
+        .calc-urgency { font-size: 0.8rem; padding: 14px 16px; }
+        .calc-urgency br { display: none; }
+        .calc-transition { margin-top: 20px; }
+
         .solution-box { padding: 24px 20px; flex-direction: column; gap: 24px; }
         .solution-text h2 { font-size: 1.5rem; }
         .timeline { margin-top: 30px; padding-left: 0; padding-right: 0; }
@@ -372,6 +709,14 @@
         .tier-price { font-size: 1.5rem; }
         .tier-cta-wrap .btn { padding: 12px 10px; font-size: 0.85rem; }
         .social-proof-toast { max-width: 210px; font-size: 0.75rem; padding: 8px 10px; }
+
+        .calc-card { padding: 20px 14px; }
+        .calc-header h2 { font-size: 1.1rem; }
+        .calc-side-amount { font-size: 1.3rem; }
+        .calc-extra-amount { font-size: 2rem; }
+        .calc-btn { font-size: 0.8rem; padding: 13px 16px; }
+        .calc-reference { font-size: 0.68rem; }
+        .calc-disclaimer { font-size: 0.66rem; }
     }
     @media(min-width: 1024px) {
         .stack-card { max-width: 750px; }
@@ -398,7 +743,7 @@
             <h1 class="fade-up">Iklan Tak Jalan? <br><span class="hero-gradient-text">Jom Bagi AI Uruskan.</span></h1>
             <p class="fade-up">Sakit kepala tengok CPA naik? Relax. Kami ada "Prompt Ajaib" yang boleh jadikan ChatGPT macam Senior Meta ADS ANALYST korang. Senang, cepat, dan tak perlu bayar mahal.</p>
             <div class="fade-up" style="margin-top: 30px;">
-                <a href="#offer" class="btn btn-primary cta-trigger"><i class="fas fa-sparkles btn-icon"></i> Jom Cuba Sekarang</a>
+                <a href="#offer" class="btn btn-primary cta-trigger"><i class="fas fa-wand-magic-sparkles btn-icon"></i> Jom Cuba Sekarang</a>
                 <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fas fa-check-circle" style="color: var(--accent);"></i> Harga sekali bayar je. Tiada subscription.
                 </div>
@@ -417,6 +762,99 @@
             </div>
         </div>
     </section>
+
+    <!-- ========================================
+         CALCULATOR SECTION
+         ======================================== -->
+    <section class="calc-section">
+        <div class="container">
+            <div class="calc-card fade-up">
+                <div class="calc-header">
+                    <span class="calc-badge">💰 Kira Potensi Untung</span>
+                    <h2>Berapa Banyak AI Boleh <span class="calc-gradient-text">Bagi Untung!</span></h2>
+                    <p>Masukkan data dari Ads Manager anda</p>
+                </div>
+
+                <div class="calc-inputs">
+                    <div class="calc-input-group">
+                        <label for="calc-spend">Belanja Iklan Sebulan (RM)</label>
+                        <input type="number" id="calc-spend" placeholder="cth: 3000" min="1" max="100000" step="1" inputmode="numeric">
+                        <div class="calc-input-hint" id="hint-spend"></div>
+                    </div>
+                    <div class="calc-input-group">
+                        <label for="calc-roas">ROAS Semasa</label>
+                        <input type="number" id="calc-roas" placeholder="cth: 2.0" min="0.1" max="20" step="0.1" inputmode="decimal">
+                        <div class="calc-input-hint" id="hint-roas"></div>
+                    </div>
+                </div>
+
+                <div class="calc-btn-wrap">
+                    <button class="calc-btn" id="calc-btn" type="button">
+                        <span class="btn-label"><i class="fas fa-calculator"></i> Kira Potensi Untung Saya</span>
+                        <span class="btn-loading-label"><span class="spinner"></span> Mengira...</span>
+                    </button>
+                </div>
+
+                <!-- Result: Comparison State -->
+                <div class="calc-result" id="calc-result-main">
+                    <div class="calc-divider"></div>
+                    <div id="calc-warning-container"></div>
+                    <div class="calc-split">
+                        <div class="calc-side calc-side-current">
+                            <div class="calc-side-label">Tanpa AI</div>
+                            <div class="calc-side-amount">RM <span id="current-revenue">0</span></div>
+                            <div class="calc-side-period">revenue / bulan</div>
+                            <div class="calc-side-sub">ROAS <span id="current-roas-display">0</span>x sekarang</div>
+                        </div>
+                        <div class="calc-side calc-side-ai">
+                            <div class="calc-side-label"><i class="fas fa-robot"></i> Dengan AI</div>
+                            <div class="calc-side-amount">RM <span id="ai-revenue">0</span></div>
+                            <div class="calc-side-period">revenue / bulan</div>
+                            <div class="calc-side-sub">ROAS 4.0x target</div>
+                        </div>
+                    </div>
+                    <div class="calc-extra">
+                        <div class="calc-extra-label">Tambahan Revenue Sebulan</div>
+                        <div class="calc-extra-amount">+RM <span id="extra-revenue">0</span></div>
+                        <div class="calc-extra-breakdown">
+                            <span>RM<span id="daily-extra">0</span>/hari</span>
+                            <span class="calc-breakdown-sep">·</span>
+                            <span>RM<span id="annual-extra">0</span>/tahun</span>
+                        </div>
+                    </div>
+                    <div class="calc-urgency">
+                        Dalam 6 bulan, itu <strong>RM<span id="six-month-extra">0</span></strong> tambahan —<br>berbanding harga prompt hanya <strong>RM35.90</strong>
+                    </div>
+                </div>
+
+                <!-- Result: Positive State (ROAS already good) -->
+                <div class="calc-result" id="calc-result-positive">
+                    <div class="calc-divider"></div>
+                    <div class="calc-positive">
+                        <div class="calc-positive-icon">🎉</div>
+                        <h3>ROI Anda Sudah Hebat!</h3>
+                        <p>Tapi AI masih boleh bantu anda <strong style="color:white;">maintain performance</strong> dan <strong style="color:white;">scale lebih selamat</strong> tanpa guessing.</p>
+                    </div>
+                </div>
+
+                <div class="calc-reference" id="calc-reference" style="display:none;">
+                    <strong>📊 Asas Pengiraan:</strong><br>
+                    Target ROAS 4.0x berdasarkan purata metrik case study 30 hari kami (CPA RM7.70–RM11.33, CPC RM0.72–RM1.04). Formula: Revenue = Spend × ROAS. Tambahan = Revenue AI − Revenue Semasa.
+                </div>
+
+                <div class="calc-disclaimer" id="calc-disclaimer" style="display:none;">
+                    ⚠️ Pengiraan ini menggunakan data input anda + benchmark case study kami sebagai perbandingan. Hasil sebenar dipengaruhi oleh niche, kualiti produk, creative, dan factor market. Ia adalah anggaran perbandingan, bukan jaminan kewangan.
+                </div>
+
+                <div class="calc-transition" id="calc-transition" style="display:none;">
+                    ↓ Nak result macam ni? Jumpa penyelesaian di bawah. ↓
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ========================================
+         END CALCULATOR SECTION
+         ======================================== -->
 
     <section class="section">
         <div class="container">
@@ -480,8 +918,8 @@
                 <div class="timeline-item"><div class="timeline-dot" style="background: #ef4444; border-color: #000;"></div><div class="journey-card" style="border-color: rgba(239,68,68,0.3);"><div class="day-badge" style="background: rgba(239,68,68,0.2); color: #ef4444;">Day 20 - KRISIS!</div><div class="ai-badge" style="background: rgba(239,68,68,0.1); color: #ef4444; border-color: #ef4444;"><i class="fas fa-exclamation-triangle"></i> AI Alert: Creative Fatigue</div><h4>Performance Jatuh!</h4><p style="font-size: 0.9rem; color: #9ca3af;">CPR NAIK! SPEND RM481 tapi SALES 26 sahaja! AI detect 'Creative Fatigue'. Suggest turunkan budget, buat creatives baru! Saya terus apply fix baru: <strong>Turunkan Budget, Sediakan Creatives Baru</strong></p><div class="video-wrapper"><iframe width="560" height="315" src="https://www.youtube.com/embed/XrpcI00-4Cs?si=-dENVpyxVZwwDS0F" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div></div>
                 <div class="timeline-item"><div class="timeline-dot"></div><div class="journey-card"><div class="day-badge">Day 21</div><div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: Maintain</div><h4>Fix Telah Dibuat</h4><p style="font-size: 0.9rem; color: #9ca3af;">CPR masih lagi tinggi, tapi AI minta maintain budget sehingga creatives baru selesai. Kesalahan besar dari pihak saya tidak sediakan creatives lebih awal, jadi performance drop walaupun AI sudah bagi warning creatives akan FATIGUE.</p></div></div>
                 <div class="timeline-item"><div class="timeline-dot"></div><div class="journey-card"><div class="day-badge">Day 29</div><div class="ai-badge"><i class="fas fa-robot"></i> Cadangan AI: SCALE</div><h4>Creatives Ditambah dan Scale UP</h4><p style="font-size: 0.9rem; color: #9ca3af;">CPR stable, SPEND RM748 sales 66, Profitable! AI suruh scale lagi!</p><div class="img-grid grid-2"><img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day29-1.webp" loading="lazy" class="journey-img zoomable-img"><img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day29-2.webp" loading="lazy" class="journey-img zoomable-img"></div></div></div>
-                <div class="timeline-item"><div class="timeline-dot" style="background: var(--accent); border-color: #000; box-shadow: 0 0 20px var(--accent);"></div><div class="journey-card" style="background: linear-gradient(145deg, #064e3b 0%, #111827 100%); border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(52,211,153,0.1);"><div class="day-badge" style="background: var(--accent); color: #000;">Day 30 - RESULT</div><div class="ai-badge" style="background: rgba(52,211,153,0.15); color: var(--accent); border-color: var(--accent);"><i class="fas fa-check-circle"></i> Mission Accomplished</div><h4 style="color: var(--accent); font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3;">Conversion: RM<span class="count-up" data-target="28614">0</span><br>CPC RM1.04 <br>Sales <span class="count-up" data-target="957">0</span>! <br>Profit RM10K+</h4><p style="font-size: 0.9rem; color: #d1fae5;">Account Ads Manager baharu, Day 1 — RM100 budget, Day 30 — Sales hampir RM30,000. Ini bukan kebetulan. Ini adalah hasil strategi AI yang konsisten.</p><div class="img-grid grid-1"><img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day30.webp" loading="lazy" class="journey-img zoomable-img" style="height: 150px;"></div></div></div>
-                <div class="timeline-item"><div class="timeline-dot" style="background: var(--accent); border-color: #000; box-shadow: 0 0 20px var(--accent);"></div><div class="journey-card" style="background: linear-gradient(145deg, #3538e6 0%, #111827 100%); border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(52,211,153,0.1);"><div class="day-badge" style="background: var(--accent); color: #000;">Untuk Pengetahuan</div><div class="ai-badge" style="background: rgba(183, 212, 13, 0.15); color: var(--accent); border-color: var(--accent);"><i class="fas fa-check-circle"></i> Mission Pending</div><h4 style="color: var(--accent); font-size: 1.2rem; margin-bottom: 10px;">ADS INI JUGA DIKUASAKAN OLEH PROMPT META ADS ANALYST YANG ANDA TENGAH LIHAT</h4><p style="font-size: 0.9rem; color: #d1fae5;">Segala keputusan daripada AI digunakan sepenuhnya untuk RUN META ADS yang anda lihat sekarang!</p></div></div>
+                <div class="timeline-item"><div class="timeline-dot" style="background: var(--accent); border-color: #000; box-shadow: 0 0 20px var(--accent);"></div><div class="journey-card" style="background: linear-gradient(145deg, #064e3b 0%, #111827 100%); border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(52,211,153,0.1);"><div class="day-badge" style="background: var(--accent); color: #000;">Day 30 - RESULT</div><div class="ai-badge" style="background: rgba(52,211,153,0.15); color: var(--accent); border-color: var(--accent);"><i class="fas fa-check-circle"></i> Mission Accomplished</div><h4 style="color: var(--accent); font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3;">Revenue: RM<span class="count-up" data-target="28614">0</span><br>CPC RM1.04 <br>Sales <span class="count-up" data-target="957">0</span>! <br>Profit RM10K+</h4><p style="font-size: 0.9rem; color: #d1fae5;">Account Ads Manager baharu, Day 1 — RM100 budget, Day 30 — Sales hampir RM30,000. Ini bukan kebetulan. Ini adalah hasil strategi AI yang konsisten.</p><div class="img-grid grid-1"><img src="https://cdn.jsdelivr.net/gh/AranisEcom/promptmedia@v1.0/day30.webp" loading="lazy" class="journey-img zoomable-img" style="height: 150px;"></div></div></div>
+                <div class="timeline-item"><div class="timeline-dot" style="background: var(--accent); border-color: #000; box-shadow: 0 0 20px var(--accent);"></div><div class="journey-card" style="background: linear-gradient(145deg, #3538e6 0%, #111827 100%); border: 1px solid var(--accent); box-shadow: 0 0 30px rgba(52,211,153,0.1);"><div class="day-badge" style="background: var(--accent); color: #000;">Untuk Pengetahuan</div><div class="ai-badge" style="background: rgba(183, 212, 13, 0.15); color: var(--accent); border-color: var(--accent);"><i class="fas fa-check-circle"></i> Bukti</div><h4 style="color: var(--accent); font-size: 1.2rem; margin-bottom: 10px;">ADS INI JUGA DIKUASAKAN OLEH PROMPT META ADS ANALYST YANG ANDA TENGAH LIHAT</h4><p style="font-size: 0.9rem; color: #d1fae5;">Segala keputusan daripada AI digunakan sepenuhnya untuk RUN META ADS yang anda lihat sekarang!</p></div></div>
             </div>
         </div>
     </section>
@@ -567,33 +1005,30 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         // --- UNLOCK BROWSER AUDIO & DING SOUND ---
-    let audioCtx;
-    function unlockAudio() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        document.removeEventListener('click', unlockAudio);
-        document.removeEventListener('touchstart', unlockAudio);
-    }
-    document.addEventListener('click', unlockAudio);
-    document.addEventListener('touchstart', unlockAudio);
+        let audioCtx;
+        function unlockAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            document.removeEventListener('click', unlockAudio);
+            document.removeEventListener('touchstart', unlockAudio);
+        }
+        document.addEventListener('click', unlockAudio);
+        document.addEventListener('touchstart', unlockAudio);
 
-    function playDingSound() {
-        if (!audioCtx || audioCtx.state === 'suspended') return;
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        
-        // "Ding" bell sound configuration
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
-        gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-        
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.2);
-    }
+        function playDingSound() {
+            if (!audioCtx || audioCtx.state === 'suspended') return;
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(1100, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            oscillator.start(audioCtx.currentTime);
+            oscillator.stop(audioCtx.currentTime + 0.2);
+        }
 
         // ========================================
         // 1. SCROLL ANIMATION OBSERVER
@@ -688,7 +1123,7 @@
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox(); });
 
         // ========================================
-        // 7. NUMBER COUNTER ANIMATION
+        // 7. NUMBER COUNTER ANIMATION (STATIC)
         // ========================================
         function startCounters(section) {
             const counters = section.querySelectorAll('.count-up');
@@ -707,58 +1142,198 @@
             });
         }
 
-    // ========================================
-    // 8. SOCIAL PROOF TOAST (NO LOCATION, REALISTIC NAMES, DING SOUND)
-    // ========================================
-    const buyers = [
-        { name: "Amir Haziq", action: "telah membeli Promo Advance", time: "2 minit lalu" },
-        { name: "Iman Zara", action: "telah membeli Promo Advance", time: "5 minit lalu" },
-        { name: "Hafiz Rizal", action: "sedang membuat pembayaran", time: "Baru saja" },
-        { name: "Nisa Aqilah", action: "telah membeli Promo Advance", time: "15 minit lalu" },
-        { name: "Fawwaz Hakim", action: "telah membeli Promo Advance", time: "1 jam lalu" },
-        { name: "Dina Shafika", action: "telah membeli Promo Advance", time: "30 minit lalu" },
-        { name: "Arif Zuhayr", action: "sedang membuat pembayaran", time: "Baru saja" },
-        { name: "Myra Batrisyia", action: "telah membeli Promo Advance", time: "3 minit lalu" },
-        { name: "Hakimi Zulkifli", action: "telah membeli Promo Advance", time: "45 minit lalu" },
-        { name: "Alya Najihah", action: "telah membeli Promo Advance", time: "1 jam lalu" },
-        { name: "Faris Ikhwan", action: "sedang membuat pembayaran", time: "Baru saja" },
-        { name: "Suriya Ezzati", action: "telah membeli Promo Advance", time: "10 minit lalu" },
-        { name: "Izzudin Razi", action: "telah membeli Promo Advance", time: "20 minit lalu" },
-        { name: "Tasha Aina", action: "sedang membuat pembayaran", time: "Baru saja" },
-        { name: "Khairol Hazim", action: "telah membeli Promo Advance", time: "4 minit lalu" },
-        { name: "Yuna Saffana", action: "telah membeli Promo Advance", time: "1 jam lalu" },
-        { name: "Wafiy Iskandar", action: "telah membeli Promo Advance", time: "8 minit lalu" },
-        { name: "Nabeel Aqeel", action: "telah membeli Promo Advance", time: "35 minit lalu" },
-        { name: "Syaza Maira", action: "sedang membuat pembayaran", time: "Baru saja" },
-        { name: "Zain Azman", action: "telah membeli Promo Advance", time: "12 minit lalu" }
-    ];
-
-    const toast = document.getElementById('social-toast');
-    const toastName = document.getElementById('toast-name');
-    const toastAction = document.getElementById('toast-action');
-    const toastTime = document.getElementById('toast-time');
-    let lastToastIndex = -1;
-
-    function showSocialProofToast() {
-        let idx;
-        do { idx = Math.floor(Math.random() * buyers.length); } while (idx === lastToastIndex && buyers.length > 1);
-        lastToastIndex = idx;
-
-        const buyer = buyers[idx];
-        toastName.textContent = buyer.name;
-        toastAction.textContent = buyer.action;
-        toastTime.textContent = buyer.time;
-
-        toast.classList.remove('hiding'); toast.classList.add('show');
-        playDingSound(); // Plays the ding sound
-
-        setTimeout(() => { toast.classList.remove('show'); toast.classList.add('hiding'); }, 5000);
-    }
-
-    setTimeout(() => { showSocialProofToast(); setInterval(() => { showSocialProofToast(); }, Math.random() * 20000 + 25000); }, 10000);
+        // ========================================
+        // 7B. DYNAMIC COUNTER (FOR CALCULATOR)
+        // ========================================
+        function animateValue(element, end, duration) {
+            if (!element) return;
+            const range = end;
+            const startTime = performance.now();
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = Math.round(range * eased);
+                element.textContent = current.toLocaleString('en-MY');
+                if (progress < 1) requestAnimationFrame(update);
+            }
+            requestAnimationFrame(update);
+        }
 
         // ========================================
-        // 9. CONFETTI CANVAS (OPTIMIZED)
+        // 8. CALCULATOR LOGIC
+        // ========================================
+        const TARGET_ROAS = 4.0;
+        const calcBtn = document.getElementById('calc-btn');
+        const calcSpendInput = document.getElementById('calc-spend');
+        const calcRoasInput = document.getElementById('calc-roas');
+        const hintSpend = document.getElementById('hint-spend');
+        const hintRoas = document.getElementById('hint-roas');
+        const resultMain = document.getElementById('calc-result-main');
+        const resultPositive = document.getElementById('calc-result-positive');
+        const calcReference = document.getElementById('calc-reference');
+        const calcDisclaimer = document.getElementById('calc-disclaimer');
+        const calcTransition = document.getElementById('calc-transition');
+        const warningContainer = document.getElementById('calc-warning-container');
+
+        calcSpendInput.addEventListener('input', () => {
+            calcSpendInput.classList.remove('input-error');
+            hintSpend.classList.remove('visible');
+        });
+        calcRoasInput.addEventListener('input', () => {
+            calcRoasInput.classList.remove('input-error');
+            hintRoas.classList.remove('visible');
+        });
+
+        calcBtn.addEventListener('click', () => {
+            const spend = parseFloat(calcSpendInput.value);
+            const roas = parseFloat(calcRoasInput.value);
+            let valid = true;
+
+            if (!spend || spend <= 0 || isNaN(spend)) {
+                calcSpendInput.classList.add('input-error');
+                hintSpend.textContent = 'Sila masukkan jumlah belanja yang betul';
+                hintSpend.classList.add('visible');
+                valid = false;
+            } else if (spend > 100000) {
+                calcSpendInput.classList.add('input-error');
+                hintSpend.textContent = 'Maksimum RM100,000';
+                hintSpend.classList.add('visible');
+                valid = false;
+            }
+
+            if (!roas || roas <= 0 || isNaN(roas)) {
+                calcRoasInput.classList.add('input-error');
+                hintRoas.textContent = 'Sila masukkan ROAS anda';
+                hintRoas.classList.add('visible');
+                valid = false;
+            } else if (roas > 20) {
+                calcRoasInput.classList.add('input-error');
+                hintRoas.textContent = 'Maksimum 20.0x';
+                hintRoas.classList.add('visible');
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            calcBtn.classList.add('loading');
+
+            setTimeout(() => {
+                calcBtn.classList.remove('loading');
+
+                // Calculate revenues
+                const currentRevenue = spend * roas;
+                const aiRevenue = spend * TARGET_ROAS;
+                const extraRevenue = Math.max(0, aiRevenue - currentRevenue);
+                const dailyExtra = extraRevenue / 30;
+                const annualExtra = extraRevenue * 12;
+                const sixMonthExtra = extraRevenue * 6;
+
+                // Show reference + disclaimer + transition
+                calcReference.style.display = 'block';
+                calcDisclaimer.style.display = 'block';
+                calcTransition.style.display = 'block';
+
+                // Warning badge for ROAS < 1
+                warningContainer.innerHTML = '';
+                if (roas < 1.0) {
+                    warningContainer.innerHTML = '<div class="calc-warning-badge"><i class="fas fa-exclamation-triangle"></i> Amaran: ROAS anda bawah 1.0x — anda sedang rugi pada setiap jualan</div>';
+                }
+
+                if (extraRevenue <= 0) {
+                    // ROAS already at or above target
+                    resultMain.classList.remove('show');
+                    resultMain.style.display = 'none';
+                    resultPositive.style.display = 'block';
+                    void resultPositive.offsetWidth;
+                    resultPositive.classList.add('show');
+                } else {
+                    // Show comparison result
+                    resultPositive.classList.remove('show');
+                    resultPositive.style.display = 'none';
+                    resultMain.style.display = 'block';
+                    void resultMain.offsetWidth;
+                    resultMain.classList.add('show');
+
+                    // Animate all numbers
+                    animateValue(document.getElementById('current-revenue'), Math.round(currentRevenue), 1000);
+                    animateValue(document.getElementById('ai-revenue'), Math.round(aiRevenue), 1200);
+                    animateValue(document.getElementById('extra-revenue'), Math.round(extraRevenue), 1400);
+                    animateValue(document.getElementById('daily-extra'), Math.round(dailyExtra), 1100);
+                    animateValue(document.getElementById('annual-extra'), Math.round(annualExtra), 1300);
+                    animateValue(document.getElementById('six-month-extra'), Math.round(sixMonthExtra), 1500);
+
+                    document.getElementById('current-roas-display').textContent = roas.toFixed(1);
+                }
+
+                // Smooth scroll to result
+                setTimeout(() => {
+                    const target = extraRevenue > 0 ? resultMain : resultPositive;
+                    target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+
+            }, 800);
+        });
+
+        // Enter key support
+        [calcSpendInput, calcRoasInput].forEach(input => {
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') calcBtn.click();
+            });
+        });
+
+        // ========================================
+        // 9. SOCIAL PROOF TOAST
+        // ========================================
+        const buyers = [
+            { name: "Amir Haziq", action: "telah membeli Promo Advance", time: "2 minit lalu" },
+            { name: "Iman Zara", action: "telah membeli Promo Advance", time: "5 minit lalu" },
+            { name: "Hafiz Rizal", action: "sedang membuat pembayaran", time: "Baru saja" },
+            { name: "Nisa Aqilah", action: "telah membeli Promo Advance", time: "15 minit lalu" },
+            { name: "Fawwaz Hakim", action: "telah membeli Promo Advance", time: "1 jam lalu" },
+            { name: "Dina Shafika", action: "telah membeli Promo Advance", time: "30 minit lalu" },
+            { name: "Arif Zuhayr", action: "sedang membuat pembayaran", time: "Baru saja" },
+            { name: "Myra Batrisyia", action: "telah membeli Promo Advance", time: "3 minit lalu" },
+            { name: "Hakimi Zulkifli", action: "telah membeli Promo Advance", time: "45 minit lalu" },
+            { name: "Alya Najihah", action: "telah membeli Promo Advance", time: "1 jam lalu" },
+            { name: "Faris Ikhwan", action: "sedang membuat pembayaran", time: "Baru saja" },
+            { name: "Suriya Ezzati", action: "telah membeli Promo Advance", time: "10 minit lalu" },
+            { name: "Izzudin Razi", action: "telah membeli Promo Advance", time: "20 minit lalu" },
+            { name: "Tasha Aina", action: "sedang membuat pembayaran", time: "Baru saja" },
+            { name: "Khairol Hazim", action: "telah membeli Promo Advance", time: "4 minit lalu" },
+            { name: "Yuna Saffana", action: "telah membeli Promo Advance", time: "1 jam lalu" },
+            { name: "Wafiy Iskandar", action: "telah membeli Promo Advance", time: "8 minit lalu" },
+            { name: "Nabeel Aqeel", action: "telah membeli Promo Advance", time: "35 minit lalu" },
+            { name: "Syaza Maira", action: "sedang membuat pembayaran", time: "Baru saja" },
+            { name: "Zain Azman", action: "telah membeli Promo Advance", time: "12 minit lalu" }
+        ];
+
+        const toast = document.getElementById('social-toast');
+        const toastName = document.getElementById('toast-name');
+        const toastAction = document.getElementById('toast-action');
+        const toastTime = document.getElementById('toast-time');
+        let lastToastIndex = -1;
+
+        function showSocialProofToast() {
+            let idx;
+            do { idx = Math.floor(Math.random() * buyers.length); } while (idx === lastToastIndex && buyers.length > 1);
+            lastToastIndex = idx;
+
+            const buyer = buyers[idx];
+            toastName.textContent = buyer.name;
+            toastAction.textContent = buyer.action;
+            toastTime.textContent = buyer.time;
+
+            toast.classList.remove('hiding'); toast.classList.add('show');
+            playDingSound();
+
+            setTimeout(() => { toast.classList.remove('show'); toast.classList.add('hiding'); }, 5000);
+        }
+
+        setTimeout(() => { showSocialProofToast(); setInterval(() => { showSocialProofToast(); }, Math.random() * 20000 + 25000); }, 10000);
+
+        // ========================================
+        // 10. CONFETTI CANVAS
         // ========================================
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
@@ -788,7 +1363,7 @@
         document.querySelectorAll('.cta-trigger').forEach(btn => { btn.addEventListener('click', triggerConfetti); });
 
         // ========================================
-        // 10. META PIXEL EVENTS
+        // 11. META PIXEL EVENTS
         // ========================================
         try { if (typeof fbq !== 'undefined') fbq('track', 'ViewContent', { content_name: 'Master Prompt: Meta Analyst AI', content_category: 'Digital Product', content_type: 'product', content_ids: ['meta-analyst-ai'], currency: 'MYR', value: 35.90 }); } catch (e) {}
         document.querySelectorAll('a[href*="checkout.html"]').forEach(function(link) {
